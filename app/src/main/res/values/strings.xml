@@ -3,8 +3,8 @@
     <string name="action_settings">Settings</string>
     <!-- Dashboard menus -->
     <string name="ask_a_question">Ask a Question</string>
-    <string name="user_pets_profiles">Your Pet's Profiles</string>
-    <string name="seach_vets">Search Vet's Profiles</string>
+    <string name="user_pets_profiles">Your Pet\'s Profiles</string>
+    <string name="search_vets">Search Vet\'s Profiles</string>
     <string name="find_hospital">Find Animal Hospital</string>
     <string name="emergency_button">Emergency</string>
     <!-- Vet's Profile -->
