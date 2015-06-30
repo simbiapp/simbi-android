@@ -15,11 +15,12 @@
         android:paddingTop="@dimen/activity_vertical_margin">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="188dp"
+            android:layout_height="240dp"
             android:layout_marginBottom="40dp"
             android:layout_marginTop="40dp"
-            android:src="@mipmap/ic_launcher" />
+            android:src="@drawable/kitty"
+            android:id="@+id/simbi_logo" />
 
         <LinearLayout
             android:id="@+id/controls"
@@ -127,16 +128,15 @@
                 android:text="@string/label_accept_login"
                 android:textColor="#fff" />
 
-            <com.facebook.widget.LoginButton
-                android:id="@+id/login_button"
+            <com.facebook.login.widget.LoginButton
+                android:id="@+id/login_with_facebook"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
                 android:layout_marginBottom="5dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:layout_marginTop="15dp" />
+                android:layout_marginTop="15dp"
+                android:layout_gravity="center_horizontal"/>
 
 
             <TextView
