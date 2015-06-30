@@ -8,4 +8,15 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar"></include>
 
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:padding="8dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+    </LinearLayout>
+
 </RelativeLayout>

@@ -1,6 +1,14 @@
 <resources>
     <string name="app_name">Simbi</string>
     <string name="action_settings">Settings</string>
+    <string name="startup_message">Starting SimbiApp</string>
+    <!-- User Related stuff -->
+    <string name="label_username_or_email">Username or Email</string>
+    <string name="label_password">Password</string>
+    <string name="label_accept_login">Login</string>
+    <string name="label_forgot_password">Forgot your password?</string>
+    <string name="label_logout">Logout</string>
+    <string name="label_fb_login">Enter with Facebook</string>
     <!-- Dashboard menus -->
     <string name="ask_a_question">Ask a Question</string>
     <string name="user_pets_profiles">Your Pet\'s Profiles</string>
