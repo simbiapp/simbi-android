@@ -10,73 +10,72 @@
         layout="@layout/toolbar"></include>
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
-        android:padding="8dp"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/toolbar"
+        android:orientation="vertical"
+        android:padding="8dp">
 
         <Button
             android:id="@+id/button_pets_profiles"
-            android:background="@drawable/button_menu"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:text="@string/user_pets_profiles"
+            android:background="@drawable/button_menu"
             android:drawableLeft="@drawable/ic_paw"
-            android:textColor="@color/color_gray"
+            android:text="@string/user_pets_profiles"
             android:textAllCaps="false"
-            android:textSize="24sp"/>
+            android:textColor="@color/color_gray"
+            android:textSize="24sp" />
 
         <Button
             android:id="@+id/button_ask_question"
-            android:background="@drawable/button_menu"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:text="@string/ask_a_question"
+            android:background="@drawable/button_menu"
             android:drawableLeft="@drawable/ic_question"
-            android:textColor="@color/color_gray"
+            android:text="@string/ask_a_question"
             android:textAllCaps="false"
-            android:textSize="24sp"/>
+            android:textColor="@color/color_gray"
+            android:textSize="24sp" />
 
         <Button
             android:id="@+id/button_find_vets"
-            android:background="@drawable/button_menu"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:text="@string/search_vets"
+            android:background="@drawable/button_menu"
             android:drawableLeft="@drawable/ic_vet"
-            android:textColor="@color/color_gray"
+            android:text="@string/search_vets"
             android:textAllCaps="false"
-            android:textSize="24sp"/>
+            android:textColor="@color/color_gray"
+            android:textSize="24sp" />
 
         <Button
             android:id="@+id/button_find_hospital"
-            android:background="@drawable/button_menu"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:text="@string/find_hospital"
+            android:background="@drawable/button_menu"
             android:drawableLeft="@drawable/ic_location"
-            android:textColor="@color/color_gray"
+            android:text="@string/find_hospital"
             android:textAllCaps="false"
-            android:textSize="24sp"/>
+            android:textColor="@color/color_gray"
+            android:textSize="24sp" />
 
         <Button
             android:id="@+id/button_emergency"
-            android:background="@drawable/button_emergency"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
+            android:background="@drawable/button_emergency"
             android:text="@string/emergency_button"
-            android:drawableLeft="@drawable/ic_emergency"
-            android:textColor="@android:color/white"
             android:textAllCaps="false"
-            android:textSize="24sp"/>
+            android:textColor="@android:color/white"
+            android:textSize="24sp" />
 
     </LinearLayout>
 
