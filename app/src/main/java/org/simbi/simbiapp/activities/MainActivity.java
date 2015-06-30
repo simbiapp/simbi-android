@@ -1,5 +1,14 @@
 package org.simbi.simbiapp.activities;
 
+import java.util.HashMap;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.text.Html;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -7,10 +16,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import org.simbi.simbiapp.R;
+import org.simbi.simbiapp.utils.AlertDialogManager;
+import org.simbi.simbiapp.utils.SessionManagement;
+
 
 public class MainActivity extends AppCompatActivity {
 
     Toolbar toolBar;
+
+    // Alert Dialog Manager
+    AlertDialogManager alert = new AlertDialogManager();
+
+    // Session Manager Class
+    SessionManagement session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +37,18 @@ public class MainActivity extends AppCompatActivity {
 
         toolBar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolBar);
+
+        session = new SessionManagement(getApplicationContext());
+        session.checkLogin();
+
+        // get user data from session
+        HashMap<String, String> user = session.getUserDetails();
+
+        // name
+        String name = user.get(SessionManagement.KEY_NAME);
+
+        // email
+        String email = user.get(SessionManagement.KEY_EMAIL);
     }
 
     @Override
