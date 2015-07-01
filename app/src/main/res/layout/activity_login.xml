@@ -15,12 +15,12 @@
         android:paddingTop="@dimen/activity_vertical_margin">
 
         <ImageView
+            android:id="@+id/simbi_logo"
             android:layout_width="188dp"
             android:layout_height="240dp"
             android:layout_marginBottom="40dp"
             android:layout_marginTop="40dp"
-            android:src="@drawable/kitty"
-            android:id="@+id/simbi_logo" />
+            android:src="@drawable/kitty" />
 
         <LinearLayout
             android:id="@+id/controls"
@@ -132,11 +132,11 @@
                 android:id="@+id/login_with_facebook"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="5dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:layout_marginTop="15dp"
-                android:layout_gravity="center_horizontal"/>
+                android:layout_marginTop="15dp" />
 
 
             <TextView

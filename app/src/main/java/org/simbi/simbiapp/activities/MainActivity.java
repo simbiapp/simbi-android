@@ -1,14 +1,5 @@
 package org.simbi.simbiapp.activities;
 
-import java.util.HashMap;
-
-import android.app.Activity;
-import android.os.Bundle;
-import android.text.Html;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -18,6 +9,8 @@ import android.view.MenuItem;
 import org.simbi.simbiapp.R;
 import org.simbi.simbiapp.utils.AlertDialogManager;
 import org.simbi.simbiapp.utils.SessionManagement;
+
+import java.util.HashMap;
 
 
 public class MainActivity extends AppCompatActivity {

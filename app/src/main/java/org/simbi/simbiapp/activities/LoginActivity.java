@@ -1,4 +1,5 @@
 package org.simbi.simbiapp.activities;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,8 +9,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import org.simbi.simbiapp.R;
-import org.simbi.simbiapp.utils.SessionManagement;
 import org.simbi.simbiapp.utils.AlertDialogManager;
+import org.simbi.simbiapp.utils.SessionManagement;
 
 public class LoginActivity extends Activity {
 
@@ -54,11 +55,11 @@ public class LoginActivity extends Activity {
                 String password = txtPassword.getText().toString();
 
                 // Check if username, password is filled
-                if(username.trim().length() > 0 && password.trim().length() > 0){
+                if (username.trim().length() > 0 && password.trim().length() > 0) {
                     // For testing puspose username, password is checked with sample data
                     // username = test
                     // password = test
-                    if(username.equals("simbidemo") && password.equals("simbi")){
+                    if (username.equals("simbidemo") && password.equals("simbi")) {
 
                         // Creating user login session
                         // For testing i am stroing name, email as follow
@@ -70,11 +71,11 @@ public class LoginActivity extends Activity {
                         startActivity(i);
                         finish();
 
-                    }else{
+                    } else {
                         // username / password doesn't match
                         alert.showAlertDialog(LoginActivity.this, "Login failed..", "Username/Password is incorrect", false);
                     }
-                }else{
+                } else {
                     // user didn't entered username or password
                     // Show alert asking him to enter the details
                     alert.showAlertDialog(LoginActivity.this, "Login failed..", "Please enter username and password", false);
@@ -84,4 +85,3 @@ public class LoginActivity extends Activity {
         });
     }
 }
-
