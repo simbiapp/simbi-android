@@ -1,10 +1,13 @@
 package org.simbi.simbiapp.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import org.simbi.simbiapp.R;
 import org.simbi.simbiapp.utils.AlertDialogManager;
@@ -23,16 +26,20 @@ public class MainActivity extends AppCompatActivity {
     // Session Manager Class
     SessionManagement session;
 
+    //Linear layout is acting as a button
+    LinearLayout searchVetProfile;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         toolBar = (Toolbar) findViewById(R.id.toolbar);
+        searchVetProfile = (LinearLayout) findViewById(R.id.search_vet_profile_button);
         setSupportActionBar(toolBar);
 
         session = new SessionManagement(getApplicationContext());
-        session.checkLogin();
+        //   session.checkLogin();
 
         // get user data from session
         HashMap<String, String> user = session.getUserDetails();
@@ -42,6 +49,14 @@ public class MainActivity extends AppCompatActivity {
 
         // email
         String email = user.get(SessionManagement.KEY_EMAIL);
+
+        searchVetProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, SearchVetProfileActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
