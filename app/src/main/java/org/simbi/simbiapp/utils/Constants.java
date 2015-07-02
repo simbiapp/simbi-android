@@ -9,4 +9,9 @@ public class Constants {
 
     //Preferences
     public static String SHOW_SPLASH = "show_splash";
+
+    //bundle
+    public static String DOC_NAME = "doc_name";
+    public static String DOC_BRANCH="doc_branch";
+    public static String DOC_LOCATION="doc_location";
 }

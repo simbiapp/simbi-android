@@ -2,7 +2,6 @@ package org.simbi.simbiapp.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -28,9 +27,9 @@ public class SearchVetProfileActivity extends AppCompatActivity {
         setSupportActionBar(toolBar);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(new VetListAdapter(getBaseContext()));
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -54,4 +53,5 @@ public class SearchVetProfileActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }

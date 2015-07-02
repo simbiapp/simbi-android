@@ -46,18 +46,21 @@
                     android:id="@+id/doctor_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="Jane Doe"
                     android:textSize="17sp" />
 
                 <TextView
                     android:id="@+id/doctor_branch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="Vet"
                     android:textSize="15sp" />
 
                 <TextView
-                    android:id="@+id/doctor_residence"
+                    android:id="@+id/doctor_location"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="sofia"
                     android:textSize="12sp" />
             </LinearLayout>
 
