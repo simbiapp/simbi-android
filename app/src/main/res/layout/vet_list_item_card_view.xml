@@ -21,8 +21,9 @@
 
                 <com.pkmmte.view.CircularImageView
                     android:id="@+id/doctor_image"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp" />
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:src="@drawable/ic_palceholder_doctor" />
 
                 <View
                     android:id="@+id/doctor_online"
@@ -53,14 +54,14 @@
                     android:id="@+id/doctor_branch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Vet"
+                    android:text="Veterinarian"
                     android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/doctor_location"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="sofia"
+                    android:text="New York"
                     android:textSize="12sp" />
             </LinearLayout>
 

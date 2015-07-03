@@ -1,4 +1,5 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
@@ -20,9 +21,11 @@
 
             <com.pkmmte.view.CircularImageView
                 android:id="@+id/doctor_image_profile"
-                android:layout_width="128dp"
-                android:layout_height="128dp"
-                android:src="@drawable/kitty" />
+                android:layout_width="136dp"
+                android:layout_height="136dp"
+                android:src="@drawable/ic_palceholder_doctor"
+                app:border="true"
+                app:shadow="true" />
 
             <View
                 android:id="@+id/doctor_online_profile"
@@ -77,15 +80,12 @@
                     android:layout_weight="1"
                     android:gravity="left">
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_thumbs_up" />
-
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
+                        android:drawableLeft="@drawable/ic_experience"
+                        android:drawablePadding="2dp"
                         android:text="10 yrs"
                         android:textSize="14sp" />
                 </LinearLayout>
@@ -96,15 +96,12 @@
                     android:layout_weight="1"
                     android:gravity="center">
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_thumbs_up" />
-
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
+                        android:drawableLeft="@drawable/ic_money"
+                        android:drawablePadding="2dp"
                         android:text="$200"
                         android:textSize="14sp" />
                 </LinearLayout>
@@ -116,15 +113,12 @@
                     android:layout_weight="1"
                     android:gravity="right">
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_thumbs_up" />
-
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
+                        android:drawableLeft="@drawable/ic_thumbs_up"
+                        android:drawablePadding="2dp"
                         android:text="100k"
                         android:textSize="14sp" />
                 </LinearLayout>
@@ -152,7 +146,7 @@
                     android:id="@+id/biography_textview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/ic_vet"
+                    android:drawableLeft="@drawable/ic_biography"
                     android:drawablePadding="20dp"
                     android:drawableRight="@drawable/ic_expand_right"
                     android:gravity="center_vertical"
@@ -167,7 +161,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="5dp"
-                    android:text="I Graduated from university of texas with doctorate in medicine .I love pets and i have 2 cats"
+                    android:text="I graduated from university of texas with doctorate in medicine.I love pets and i have 2 cats"
                     android:textSize="15sp"
                     android:visibility="gone" />
             </LinearLayout>
@@ -193,8 +187,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/ic_language"
-                    android:drawableRight="@drawable/ic_expand_right"
                     android:drawablePadding="20dp"
+                    android:drawableRight="@drawable/ic_expand_right"
                     android:gravity="center_vertical"
                     android:text="@string/languages"
                     android:textSize="18sp" />
@@ -232,8 +226,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/ic_calendar"
-                    android:drawableRight="@drawable/ic_expand_right"
                     android:drawablePadding="20dp"
+                    android:drawableRight="@drawable/ic_expand_right"
                     android:gravity="center_vertical"
                     android:text="@string/calendar"
                     android:textSize="18sp" />
@@ -251,9 +245,12 @@
             android:layout_marginTop="10dp"
             android:background="@color/color_primary"
             android:drawableLeft="@drawable/ic_contact_vet"
+            android:drawablePadding="-30dp"
             android:padding="10dp"
-            android:text="@string/call_vet"
-            android:textColor="@color/color_bg" />
+            android:text="@string/contact_vet"
+            android:textColor="@color/color_bg"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 </ScrollView>

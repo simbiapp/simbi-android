@@ -52,12 +52,12 @@ public class VetProfileActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (biographyDetailsTextView.getVisibility() == View.GONE) {
                     biographyDetailsTextView.setVisibility(View.VISIBLE);
-                    biographyTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_vet,
+                    biographyTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_biography,
                             0,
                             R.drawable.ic_expand_down, 0);
                 } else {
                     biographyDetailsTextView.setVisibility(View.GONE);
-                    biographyTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_vet,
+                    biographyTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_biography,
                             0,
                             R.drawable.ic_expand_right, 0);
                 }
