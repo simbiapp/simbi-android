@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         searchVetProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, SearchVetProfileActivity.class);
+                Intent intent = new Intent(MainActivity.this, VetListActivity.class);
                 startActivity(intent);
             }
         });

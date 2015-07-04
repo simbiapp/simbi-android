@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
+        android:id="@+id/linear_layout1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -23,7 +25,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/square_edditext"
+                android:background="@drawable/square_edittext"
                 android:drawableLeft="@drawable/ic_search"
                 android:hint="@string/search_doc"
                 android:padding="5dp"
@@ -37,6 +39,53 @@
             android:layout_height="match_parent"
             android:layout_marginTop="5dp"
             android:scrollbars="vertical" />
-
     </LinearLayout>
+
+    <View
+        android:id="@+id/transparent_overlay_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_semi_transparent"
+        android:visibility="gone" />
+
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/floating_menu_filter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="16dp"
+        android:layout_marginRight="16dp"
+        android:paddingLeft="30dp"
+        android:paddingTop="30dp"
+        fab:menu_colorNormal="@color/color_primary"
+        fab:menu_colorPressed="@color/color_bg"
+        fab:menu_labels_style="@style/menu_labels_style">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_experience_white"
+            fab:fab_colorPressed="@color/color_bg"
+            fab:fab_label="@string/filter_experience"
+            fab:fab_size="mini" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/floating_button_fee"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_money_white"
+            fab:fab_colorPressed="@color/color_bg"
+            fab:fab_label="@string/filter_fee"
+            fab:fab_size="mini" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_thumbs_up_white"
+            fab:fab_colorPressed="@color/color_bg"
+            fab:fab_label="@string/filter_likes"
+            fab:fab_size="mini" />
+
+    </com.github.clans.fab.FloatingActionMenu>
+
 </FrameLayout>

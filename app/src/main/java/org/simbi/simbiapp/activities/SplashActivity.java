@@ -12,8 +12,8 @@ import org.simbi.simbiapp.utils.Constants;
 
 public class SplashActivity extends AppCompatActivity {
 
-    private SharedPreferences sharedPreferences;
     private static int SPLASH_DURATION = 1;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

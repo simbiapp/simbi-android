@@ -22,5 +22,9 @@
     <string name="add_favorite_vet">Add to Favorites</string>
     <string name="contact_vet">Contact</string>
     <string name="search_doc">Search doctors and clinics...</string>
+    <!-- Vet's Search -->
+    <string name="filter_experience">Filter by experience</string>
+    <string name="filter_fee">Filter by fee</string>
+    <string name="filter_likes">Filter by likes</string>
 
 </resources>
