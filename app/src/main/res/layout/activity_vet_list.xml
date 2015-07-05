@@ -5,58 +5,63 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/linear_layout1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include
-            android:id="@+id/toolbar_vet_list"
-            layout="@layout/toolbar" />
-
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:background="@color/color_primary">
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/square_edittext"
-                android:drawableLeft="@drawable/ic_search"
-                android:hint="@string/search_doc"
-                android:padding="5dp"
-                android:textColor="@android:color/darker_gray"
-                android:textColorHint="@android:color/darker_gray" />
-        </LinearLayout>
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/vet_list_recycler_view"
+            android:id="@+id/linear_layout1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="5dp"
-            android:scrollbars="vertical" />
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/toolbar_vet_list"
+                layout="@layout/toolbar" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@color/color_primary">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/square_edittext"
+                    android:drawableLeft="@drawable/ic_search"
+                    android:hint="@string/search_doc"
+                    android:padding="5dp"
+                    android:textColor="@android:color/darker_gray"
+                    android:textColorHint="@android:color/darker_gray" />
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/vet_list_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:scrollbars="vertical" />
+        </LinearLayout>
+
     </LinearLayout>
 
     <View
         android:id="@+id/transparent_overlay_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/color_semi_transparent"
+        android:background="@color/color_semi_transparent_black"
         android:visibility="gone" />
 
     <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/floating_menu_filter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="bottom|right"
-        android:layout_marginBottom="16dp"
-        android:layout_marginRight="16dp"
-        android:paddingLeft="30dp"
-        android:paddingTop="30dp"
+        android:paddingBottom="16dp"
+        android:paddingRight="16dp"
         fab:menu_colorNormal="@color/color_primary"
         fab:menu_colorPressed="@color/color_bg"
         fab:menu_labels_style="@style/menu_labels_style">
@@ -65,6 +70,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_experience_white"
+            fab:fab_colorNormal="@color/color_primary"
             fab:fab_colorPressed="@color/color_bg"
             fab:fab_label="@string/filter_experience"
             fab:fab_size="mini" />
@@ -74,6 +80,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_money_white"
+            fab:fab_colorNormal="@color/color_primary"
             fab:fab_colorPressed="@color/color_bg"
             fab:fab_label="@string/filter_fee"
             fab:fab_size="mini" />
@@ -82,6 +89,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_thumbs_up_white"
+            fab:fab_colorNormal="@color/color_primary"
             fab:fab_colorPressed="@color/color_bg"
             fab:fab_label="@string/filter_likes"
             fab:fab_size="mini" />
@@ -89,3 +97,4 @@
     </com.github.clans.fab.FloatingActionMenu>
 
 </FrameLayout>
+

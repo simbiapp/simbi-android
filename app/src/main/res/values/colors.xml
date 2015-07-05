@@ -5,5 +5,5 @@
     <color name="color_primary_light">#ff4ffe</color>
     <color name="color_gray">#7F7F7F</color>
     <color name="color_bg">#FFF4F3</color>
-    <color name="color_semi_transparent">#E6FFFFFF</color>
+    <color name="color_semi_transparent_black">#B3000000</color>
 </resources>

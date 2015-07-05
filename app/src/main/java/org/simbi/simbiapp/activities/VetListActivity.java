@@ -1,6 +1,5 @@
 package org.simbi.simbiapp.activities;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -50,12 +49,10 @@ public class VetListActivity extends AppCompatActivity {
                     /*
                     add a semi transparent overlay when float menu action is pressed
                      */
-                    floatingActionMenu.setBackgroundColor(Color.WHITE);
                     transparentOverlay.setVisibility(View.VISIBLE);
                 }
                 else {
                     // remove the overlay
-                    floatingActionMenu.setBackgroundColor(Color.TRANSPARENT);
                     transparentOverlay.setVisibility(View.GONE);
                 }
             }
