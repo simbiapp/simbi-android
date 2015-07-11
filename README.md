@@ -1,2 +1,2 @@
 # simbi-android
-Simbi for Android.
+Simbi for Android
