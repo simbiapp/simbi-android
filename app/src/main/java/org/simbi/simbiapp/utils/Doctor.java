@@ -1,10 +1,6 @@
 package org.simbi.simbiapp.utils;
 
-import android.media.Image;
-
 import com.google.gson.annotations.SerializedName;
-
-import java.util.Date;
 
 /**
  * DTO implementation for Doctor Object
@@ -59,5 +55,57 @@ public class Doctor {
 
     public int getId() {
         return id;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public String getUserProfile() {
+        return userProfile;
+    }
+
+    public String getClinic() {
+        return clinic;
+    }
+
+    public String getAddedOn() {
+        return addedOn;
+    }
+
+    public String getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public String getDegree() {
+        return degree;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getExperience() {
+        return experience;
+    }
+
+    public String getGenderChoice() {
+        return genderChoice;
+    }
+
+    public String getLastUpdatedOn() {
+        return lastUpdatedOn;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public String getPhoto() {
+        return SimbiApi.baseApiUrl + photo;
+    }
+
+    public String getSpecialization() {
+        return specialization;
     }
 }

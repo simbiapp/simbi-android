@@ -6,9 +6,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import org.simbi.simbiapp.R;
 import org.simbi.simbiapp.activities.VetProfileActivity;
@@ -17,37 +18,16 @@ import org.simbi.simbiapp.utils.Doctor;
 import org.simbi.simbiapp.utils.SimbiApi;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-/**
- * Created by rahul on 1/7/15.
- */
 public class VetListAdapter extends RecyclerView.Adapter<VetListAdapter.ViewHolder> {
-    //placeholder adapter
+
     Context context;
-
-    //dummy data for now
-    String[] items = new String[]{
-            "Jane Doe",
-            "John Doe",
-            "Steve Harris",
-            "Tony Iommi",
-            "Hello World",
-            "Jane Doe",
-            "John Doe",
-            "Steve Harris",
-            "Tony Iommi",
-            "Hello World"
-    };
-
-    SimbiApi simbiApi;
-
     List<Doctor> doctors = new ArrayList<>();
 
     public VetListAdapter(Context context) {
         this.context = context;
-        simbiApi = SimbiApi.getInstance(context);
+        SimbiApi simbiApi = SimbiApi.getInstance(context);
         doctors = simbiApi.getAllDoctors();
     }
 
@@ -58,40 +38,56 @@ public class VetListAdapter extends RecyclerView.Adapter<VetListAdapter.ViewHold
         TextView doctorName = (TextView) v.findViewById(R.id.doctor_name);
         TextView branch = (TextView) v.findViewById(R.id.doctor_branch);
         TextView location = (TextView) v.findViewById(R.id.doctor_location);
-        return new ViewHolder(v, doctorName, branch, location);
+        ImageView image = (ImageView) v.findViewById(R.id.doctor_image);
+
+        int id = 0;// This is used for sending the doctor id of the selected doctor to next activity
+        return new ViewHolder(v, doctorName, branch, location, image, id);
     }
 
     @Override
     public void onBindViewHolder(VetListAdapter.ViewHolder holder, int position) {
+        Doctor doctor = doctors.get(position);
+
+        holder.doctorId = doctor.getId(); //retrieve the doctor id and assign it to its copy in ViewHolder
+        holder.doctorNameTextView.setText("Dr Jane Doe");
+        holder.doctorBranchTextView.setText(doctor.getSpecialization());
+        holder.doctorLocationTextView.setText("Seattle");
+        Picasso.with(context)
+                .load(doctor.getPhoto())
+                .into(holder.doctorImageView);
     }
 
     @Override
     public int getItemCount() {
-        return items.length;
+        if (doctors.size() != 0 && doctors != null)
+            return doctors.size();
+        return 0;
     }
-
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public TextView doctorNameTextView;
         public TextView doctorBranchTextView;
         public TextView doctorLocationTextView;
+        public ImageView doctorImageView;
+        public int doctorId;
 
-        public ViewHolder(View itemView, TextView name, TextView branch, TextView location) {
+        public ViewHolder(View itemView, TextView name, TextView branch, TextView location,
+                          ImageView image, int id) {
             super(itemView);
             itemView.setOnClickListener(this);
             doctorNameTextView = name;
             doctorBranchTextView = branch;
             doctorLocationTextView = location;
+            doctorImageView = image;
+            doctorId = id;
         }
 
         @Override
         public void onClick(View view) {
             Intent mIntent = new Intent(view.getContext(), VetProfileActivity.class);
-            mIntent.putExtra(Constants.DOC_NAME, doctorNameTextView.getText().toString());
-            mIntent.putExtra(Constants.DOC_BRANCH, doctorBranchTextView.getText().toString());
-            mIntent.putExtra(Constants.DOC_LOCATION, doctorLocationTextView.getText().toString());
-
+            mIntent.putExtra(Constants.BUNDLE_DOC_ID,
+                    String.valueOf(doctorId));//sending the id of the selected doctor to next activity
             view.getContext().startActivity(mIntent);
         }
     }

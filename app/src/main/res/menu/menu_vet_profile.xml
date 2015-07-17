@@ -10,7 +10,7 @@
 
     <item
         android:id="@+id/add_to_fav"
-        android:icon="@drawable/ic_fab_star"
+        android:icon="@drawable/ic_fab_star_off"
         android:title="@string/add_favorite_vet"
         app:showAsAction="always" />
 </menu>

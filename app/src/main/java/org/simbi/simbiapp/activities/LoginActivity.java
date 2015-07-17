@@ -54,25 +54,22 @@ public class LoginActivity extends Activity {
             @Override
             public void onClick(View arg0) {
                 // Get username, password from EditText
-                String username = txtUsername.getText().toString();
-                String password = txtPassword.getText().toString();
+                String username = txtUsername.getText().toString().trim();
+                String password = txtPassword.getText().toString().trim();
 
                 // Check if username, password is filled
-                if (username.trim().length() > 0 && password.trim().length() > 0) {
-
-                    if (MiscUtils.hasInternetConnectivity(context)) {
-                        new LoginTask().execute(username.trim(), password.trim());
+                if (username.length() > 0 && password.length() > 0) {
+                    if (MiscUtils.hasInternetConnectivity(getBaseContext())) {
+                        new LoginTask().execute(username, password);
                     } else {
-                        // does not have internet connectivity
-                        alert.showAlertDialog(LoginActivity.this, getString(R.string.message_login_fail),
-                                getString(R.string.message_internet_disconnected),
-                                false);
+                        alert.showAlertDialog(getBaseContext(), getString(R.string.message_login_fail),
+                                getString(R.string.message_internet_disconnected), false);
                     }
                 } else {
                     // user didn't entered username or password
                     // Show alert asking him to enter the details
                     alert.showAlertDialog(LoginActivity.this, getString(R.string.message_login_fail),
-                            "Please enter username and password",
+                            getString(R.string.message_enter_user_pass),
                             false);
                 }
             }

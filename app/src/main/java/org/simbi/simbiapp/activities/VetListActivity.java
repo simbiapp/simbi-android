@@ -15,16 +15,19 @@ import com.github.clans.fab.FloatingActionMenu;
 
 import org.simbi.simbiapp.R;
 import org.simbi.simbiapp.adapters.VetListAdapter;
+import org.simbi.simbiapp.utils.AlertDialogManager;
+import org.simbi.simbiapp.utils.MiscUtils;
 
 public class VetListActivity extends AppCompatActivity {
 
     private Toolbar toolBar;
-
     private RecyclerView mRecyclerView;
 
     private FloatingActionMenu floatingActionMenu;
 
     private View transparentOverlay;
+
+    private AlertDialogManager alert = new AlertDialogManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,9 +41,6 @@ public class VetListActivity extends AppCompatActivity {
         setSupportActionBar(toolBar);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(VetListActivity.this));
-
-        //populate recycler view with data asynchronously
-        new FetchAllDoctorsTask().execute();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -57,6 +57,14 @@ public class VetListActivity extends AppCompatActivity {
                 }
             }
         });
+
+        if (MiscUtils.hasInternetConnectivity(getBaseContext())) {
+            //populate recycler view with data asynchronously
+            new FetchAllDoctorsTask().execute();
+        } else {
+            alert.showAlertDialog(VetListActivity.this, getString(R.string.message_login_fail),
+                    getString(R.string.message_internet_disconnected), true);
+        }
     }
 
     @Override

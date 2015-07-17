@@ -4,25 +4,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
 import org.simbi.simbiapp.R;
-import org.simbi.simbiapp.utils.AlertDialogManager;
 import org.simbi.simbiapp.utils.SessionManagement;
-import org.simbi.simbiapp.utils.SimbiApi;
 
 import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
     Toolbar toolBar;
-
-    // Alert Dialog Manager
-    AlertDialogManager alert = new AlertDialogManager();
 
     // Session Manager Class
     SessionManagement session;
@@ -41,17 +35,6 @@ public class MainActivity extends AppCompatActivity {
 
         session = new SessionManagement(getApplicationContext());
         session.checkLogin();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if (SimbiApi.getInstance(getBaseContext()).canAuthenticateToServer())
-                    Log.d("satan", "evil");
-                else
-                    Log.d("god", "obscene");
-            }
-        }).start();
-
 
         // get user data from session
         HashMap<String, String> user = session.getUserDetails();

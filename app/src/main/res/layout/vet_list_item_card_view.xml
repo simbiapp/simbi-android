@@ -22,8 +22,7 @@
                 <com.pkmmte.view.CircularImageView
                     android:id="@+id/doctor_image"
                     android:layout_width="64dp"
-                    android:layout_height="64dp"
-                    android:src="@drawable/ic_palceholder_doctor" />
+                    android:layout_height="64dp" />
 
                 <View
                     android:id="@+id/doctor_online"
