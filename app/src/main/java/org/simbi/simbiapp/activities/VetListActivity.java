@@ -21,6 +21,7 @@ import org.simbi.simbiapp.utils.MiscUtils;
 public class VetListActivity extends AppCompatActivity {
 
     private Toolbar toolBar;
+
     private RecyclerView mRecyclerView;
 
     private FloatingActionMenu floatingActionMenu;
@@ -45,6 +46,7 @@ public class VetListActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         floatingActionMenu.setClosedOnTouchOutside(true);
+
         floatingActionMenu.setOnMenuToggleListener(new FloatingActionMenu.OnMenuToggleListener() {
             @Override
             public void onMenuToggle(boolean toggle) {

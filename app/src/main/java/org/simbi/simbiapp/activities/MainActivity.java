@@ -10,13 +10,18 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import org.simbi.simbiapp.R;
+import org.simbi.simbiapp.utils.AlertDialogManager;
 import org.simbi.simbiapp.utils.SessionManagement;
 
 import java.util.HashMap;
 
+
 public class MainActivity extends AppCompatActivity {
 
     Toolbar toolBar;
+
+    // Alert Dialog Manager
+    AlertDialogManager alert = new AlertDialogManager();
 
     // Session Manager Class
     SessionManagement session;

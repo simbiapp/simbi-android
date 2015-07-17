@@ -69,6 +69,7 @@ public class VetProfileActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
         biographyLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
