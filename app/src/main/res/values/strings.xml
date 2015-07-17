@@ -9,6 +9,8 @@
     <string name="label_forgot_password">Forgot your password?</string>
     <string name="label_logout">Logout</string>
     <string name="label_fb_login">Enter with Facebook</string>
+    <string name="message_internet_disconnected">Please Check Internet Connectivity</string>
+    <string name="message_login_fail">Login failed..</string>
     <!-- Dashboard menus -->
     <string name="ask_a_question">Ask a Question</string>
     <string name="user_pets_profiles">Your Pet\'s Profiles</string>

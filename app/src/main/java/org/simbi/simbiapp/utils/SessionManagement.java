@@ -8,18 +8,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.preference.PreferenceManager;
 
 import org.simbi.simbiapp.activities.LoginActivity;
 
 import java.util.HashMap;
 
 public class SessionManagement {
+
     // User name (make variable public to access from outside)
     public static final String KEY_NAME = "name";
     // Email address (make variable public to access from outside)
-    public static final String KEY_EMAIL = "email";
-    // Sharedpref file name
-    private static final String PREF_NAME = "SimbiPrefs";
+    public static final String KEY_AUTH_TOKEN = "auth_token";
     // All Shared Preferences Keys
     private static final String IS_LOGIN = "IsLoggedIn";
     // Shared Preferences
@@ -34,22 +34,22 @@ public class SessionManagement {
     // Constructor
     public SessionManagement(Context context) {
         this._context = context;
-        pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
+        pref = PreferenceManager.getDefaultSharedPreferences(context);
         editor = pref.edit();
     }
 
     /**
      * Create login session
      */
-    public void createLoginSession(String name, String email) {
+    public void createLoginSession(String userName, String authToken) {
         // Storing login value as TRUE
         editor.putBoolean(IS_LOGIN, true);
 
         // Storing name in pref
-        editor.putString(KEY_NAME, name);
+        editor.putString(KEY_NAME, userName);
 
-        // Storing email in pref
-        editor.putString(KEY_EMAIL, email);
+        // Storing authentication token in pref
+        editor.putString(KEY_AUTH_TOKEN, authToken);
 
         // commit changes
         editor.commit();
@@ -74,7 +74,6 @@ public class SessionManagement {
             // Staring Login Activity
             _context.startActivity(i);
         }
-
     }
 
 
@@ -87,7 +86,7 @@ public class SessionManagement {
         user.put(KEY_NAME, pref.getString(KEY_NAME, null));
 
         // user email id
-        user.put(KEY_EMAIL, pref.getString(KEY_EMAIL, null));
+        user.put(KEY_AUTH_TOKEN, pref.getString(KEY_AUTH_TOKEN, null));
 
         // return user
         return user;

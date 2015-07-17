@@ -24,7 +24,6 @@ public class VetProfileActivity extends AppCompatActivity {
     TextView languageDetailsTextView;
     TextView languageTextView;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

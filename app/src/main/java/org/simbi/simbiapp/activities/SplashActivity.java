@@ -8,11 +8,11 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 
 import org.simbi.simbiapp.R;
-import org.simbi.simbiapp.utils.Constants;
 
 public class SplashActivity extends AppCompatActivity {
 
     private static int SPLASH_DURATION = 1;
+    public String SHOW_SPLASH = "show_splash";
     private SharedPreferences sharedPreferences;
 
     @Override
@@ -20,7 +20,7 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
-        if (!sharedPreferences.getBoolean(Constants.SHOW_SPLASH, false)) {
+        if (!sharedPreferences.getBoolean(SHOW_SPLASH, false)) {
             setContentView(R.layout.activity_splash);
             new Handler().postDelayed(new Runnable() {
                 public void run() {
@@ -30,7 +30,7 @@ public class SplashActivity extends AppCompatActivity {
             }, SPLASH_DURATION * 1000);
 
             SharedPreferences.Editor prefsEditor = sharedPreferences.edit();
-            prefsEditor.putBoolean(Constants.SHOW_SPLASH, true);
+            prefsEditor.putBoolean(SHOW_SPLASH, true);
             prefsEditor.commit();
         } else {
             Intent goToMainActivity = new Intent(SplashActivity.this, MainActivity.class);

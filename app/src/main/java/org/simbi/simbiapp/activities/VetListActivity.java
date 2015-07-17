@@ -32,7 +32,7 @@ public class VetListActivity extends AppCompatActivity {
         toolBar = (Toolbar) findViewById(R.id.toolbar_vet_list);
         mRecyclerView = (RecyclerView) findViewById(R.id.vet_list_recycler_view);
         floatingActionMenu = (FloatingActionMenu) findViewById(R.id.floating_menu_filter);
-        transparentOverlay=findViewById(R.id.transparent_overlay_view);
+        transparentOverlay = findViewById(R.id.transparent_overlay_view);
         setSupportActionBar(toolBar);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -45,13 +45,12 @@ public class VetListActivity extends AppCompatActivity {
         floatingActionMenu.setOnMenuToggleListener(new FloatingActionMenu.OnMenuToggleListener() {
             @Override
             public void onMenuToggle(boolean toggle) {
-                if(toggle) {
+                if (toggle) {
                     /*
                     add a semi transparent overlay when float menu action is pressed
                      */
                     transparentOverlay.setVisibility(View.VISIBLE);
-                }
-                else {
+                } else {
                     // remove the overlay
                     transparentOverlay.setVisibility(View.GONE);
                 }

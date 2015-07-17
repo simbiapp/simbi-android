@@ -1,28 +1,34 @@
 package org.simbi.simbiapp.activities;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.json.JSONException;
 import org.simbi.simbiapp.R;
 import org.simbi.simbiapp.utils.AlertDialogManager;
+import org.simbi.simbiapp.utils.MiscUtils;
 import org.simbi.simbiapp.utils.SessionManagement;
+import org.simbi.simbiapp.utils.SimbiApi;
+
+import java.io.IOException;
 
 public class LoginActivity extends Activity {
 
+    private static Context context;
     // Email, password edittext
     EditText txtUsername, txtPassword;
-
     // login button
     Button btnLogin;
-
     // Alert Dialog Manager
     AlertDialogManager alert = new AlertDialogManager();
-
     // Session Manager Class
     SessionManagement session;
 
@@ -33,6 +39,7 @@ public class LoginActivity extends Activity {
 
         // Session Manager
         session = new SessionManagement(getApplicationContext());
+        context = getBaseContext();
 
         // Email, Password input text
         txtUsername = (EditText) findViewById(R.id.edtUserName);
@@ -56,32 +63,61 @@ public class LoginActivity extends Activity {
 
                 // Check if username, password is filled
                 if (username.trim().length() > 0 && password.trim().length() > 0) {
-                    // For testing puspose username, password is checked with sample data
-                    // username = test
-                    // password = test
-                    if (username.equals("simbidemo") && password.equals("simbi")) {
 
-                        // Creating user login session
-                        // For testing i am stroing name, email as follow
-                        // Use user real data
-                        session.createLoginSession("Dairon Medina", "dairon.medina@gmail.com");
-
-                        // Staring MainActivity
-                        Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                        startActivity(i);
-                        finish();
-
+                    if (MiscUtils.hasInternetConnectivity(context)) {
+                        new LoginTask().execute(username.trim(), password.trim());
                     } else {
-                        // username / password doesn't match
-                        alert.showAlertDialog(LoginActivity.this, "Login failed..", "Username/Password is incorrect", false);
+                        // does not have internet connectivity
+                        alert.showAlertDialog(LoginActivity.this, getString(R.string.message_login_fail),
+                                getString(R.string.message_internet_disconnected),
+                                false);
                     }
                 } else {
                     // user didn't entered username or password
                     // Show alert asking him to enter the details
-                    alert.showAlertDialog(LoginActivity.this, "Login failed..", "Please enter username and password", false);
+                    alert.showAlertDialog(LoginActivity.this, getString(R.string.message_login_fail),
+                            "Please enter username and password",
+                            false);
                 }
-
             }
         });
+    }
+
+    private class LoginTask extends AsyncTask<String, Void, Void> {
+
+        SessionManagement sessionManagement;
+        ProgressDialog dialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialog = new ProgressDialog(LoginActivity.this);
+            dialog.setMessage("Please Wait");
+            dialog.setIndeterminate(true);
+            dialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(String... credentials) {
+            try {
+                SimbiApi.getInstance(context).doLogin(credentials[0], credentials[1]);
+            } catch (IOException ioe) { }
+            catch (JSONException e) { }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            dialog.dismiss();
+            sessionManagement = new SessionManagement(context);
+            if (sessionManagement.isLoggedIn()) {
+                Intent i = new Intent(context, MainActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
+                finish();
+            }
+        }
     }
 }

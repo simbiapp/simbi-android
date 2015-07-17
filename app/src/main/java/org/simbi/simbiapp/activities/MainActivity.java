@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.LinearLayout;
 import org.simbi.simbiapp.R;
 import org.simbi.simbiapp.utils.AlertDialogManager;
 import org.simbi.simbiapp.utils.SessionManagement;
+import org.simbi.simbiapp.utils.SimbiApi;
 
 import java.util.HashMap;
 
@@ -39,7 +41,23 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolBar);
 
         session = new SessionManagement(getApplicationContext());
-        //   session.checkLogin();
+        session.checkLogin();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    if (SimbiApi.getInstance(getBaseContext()).canAuthenticateToServer()) {
+                        Log.d("satan", "evil");
+                    } else {
+                        Log.d("god", "obscene");
+                    }
+                } catch (Exception e) {
+
+                }
+            }
+        }).start();
+
 
         // get user data from session
         HashMap<String, String> user = session.getUserDetails();
@@ -48,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         String name = user.get(SessionManagement.KEY_NAME);
 
         // email
-        String email = user.get(SessionManagement.KEY_EMAIL);
+        String email = user.get(SessionManagement.KEY_AUTH_TOKEN);
 
         searchVetProfile.setOnClickListener(new View.OnClickListener() {
             @Override
