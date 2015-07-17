@@ -8,9 +8,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import org.simbi.simbiapp.R;
 import org.simbi.simbiapp.activities.VetProfileActivity;
 import org.simbi.simbiapp.utils.Constants;
+import org.simbi.simbiapp.utils.Doctor;
+import org.simbi.simbiapp.utils.SimbiApi;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by rahul on 1/7/15.
@@ -33,8 +41,14 @@ public class VetListAdapter extends RecyclerView.Adapter<VetListAdapter.ViewHold
             "Hello World"
     };
 
+    SimbiApi simbiApi;
+
+    List<Doctor> doctors = new ArrayList<>();
+
     public VetListAdapter(Context context) {
         this.context = context;
+        simbiApi = SimbiApi.getInstance(context);
+        doctors = simbiApi.getAllDoctors();
     }
 
     @Override

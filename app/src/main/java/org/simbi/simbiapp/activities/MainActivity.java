@@ -17,7 +17,6 @@ import org.simbi.simbiapp.utils.SimbiApi;
 
 import java.util.HashMap;
 
-
 public class MainActivity extends AppCompatActivity {
 
     Toolbar toolBar;
@@ -46,15 +45,10 @@ public class MainActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    if (SimbiApi.getInstance(getBaseContext()).canAuthenticateToServer()) {
-                        Log.d("satan", "evil");
-                    } else {
-                        Log.d("god", "obscene");
-                    }
-                } catch (Exception e) {
-
-                }
+                if (SimbiApi.getInstance(getBaseContext()).canAuthenticateToServer())
+                    Log.d("satan", "evil");
+                else
+                    Log.d("god", "obscene");
             }
         }).start();
 

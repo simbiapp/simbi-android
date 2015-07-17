@@ -4,13 +4,13 @@ import org.simbi.simbiapp.BuildConfig;
 
 public interface Constants {
 
-    String TAG = "Simbi";
-    String VERSION_NAME = BuildConfig.VERSION_NAME;
-
+    public static String TAG = "Simbi";
+    public static String VERSION_NAME = BuildConfig.VERSION_NAME;
 
     //bundle
-    String DOC_NAME = "doc_name";
-    String DOC_BRANCH = "doc_branch";
-    String DOC_LOCATION = "doc_location";
+    public static String DOC_NAME = "doc_name";
+    public static String DOC_BRANCH = "doc_branch";
+    public static String DOC_LOCATION = "doc_location";
+
 
 }

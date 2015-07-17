@@ -1,5 +1,7 @@
 package org.simbi.simbiapp.activities;
 
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,20 +37,19 @@ public class VetListActivity extends AppCompatActivity {
         transparentOverlay = findViewById(R.id.transparent_overlay_view);
         setSupportActionBar(toolBar);
 
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.setAdapter(new VetListAdapter(getBaseContext()));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(VetListActivity.this));
+
+        //populate recycler view with data asynchronously
+        new FetchAllDoctorsTask().execute();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         floatingActionMenu.setClosedOnTouchOutside(true);
-
         floatingActionMenu.setOnMenuToggleListener(new FloatingActionMenu.OnMenuToggleListener() {
             @Override
             public void onMenuToggle(boolean toggle) {
                 if (toggle) {
-                    /*
-                    add a semi transparent overlay when float menu action is pressed
-                     */
+                    // add a semi transparent overlay when float menu action is pressed
                     transparentOverlay.setVisibility(View.VISIBLE);
                 } else {
                     // remove the overlay
@@ -78,6 +79,34 @@ public class VetListActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private class FetchAllDoctorsTask extends AsyncTask<Void, Void, Void> {
+
+        VetListAdapter adapter;
+        ProgressDialog dialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialog = new ProgressDialog(VetListActivity.this);
+            dialog.setMessage("Please Wait");
+            dialog.setIndeterminate(true);
+            dialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            adapter = new VetListAdapter(getBaseContext());
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            dialog.dismiss();
+            mRecyclerView.setAdapter(adapter);
+        }
     }
 
 }

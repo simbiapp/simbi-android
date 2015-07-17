@@ -128,16 +128,16 @@
                 android:text="@string/label_accept_login"
                 android:textColor="#fff" />
 
-       <!--     <com.facebook.login.widget.LoginButton
-                android:id="@+id/login_with_facebook"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="15dp" />
--->
+            <!--     <com.facebook.login.widget.LoginButton
+                     android:id="@+id/login_with_facebook"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:layout_gravity="center_horizontal"
+                     android:layout_marginBottom="5dp"
+                     android:layout_marginLeft="5dp"
+                     android:layout_marginRight="5dp"
+                     android:layout_marginTop="15dp" />
+     -->
 
             <TextView
                 android:id="@+id/forgot_password"

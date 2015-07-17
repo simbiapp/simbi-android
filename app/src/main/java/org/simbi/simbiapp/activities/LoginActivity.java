@@ -11,14 +11,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.json.JSONException;
 import org.simbi.simbiapp.R;
 import org.simbi.simbiapp.utils.AlertDialogManager;
 import org.simbi.simbiapp.utils.MiscUtils;
 import org.simbi.simbiapp.utils.SessionManagement;
 import org.simbi.simbiapp.utils.SimbiApi;
-
-import java.io.IOException;
 
 public class LoginActivity extends Activity {
 
@@ -46,7 +43,6 @@ public class LoginActivity extends Activity {
         txtPassword = (EditText) findViewById(R.id.edtPassword);
 
         Toast.makeText(getApplicationContext(), "User Login Status: " + session.isLoggedIn(), Toast.LENGTH_LONG).show();
-
 
         // Login button
         btnLogin = (Button) findViewById(R.id.btnLogin);
@@ -99,10 +95,7 @@ public class LoginActivity extends Activity {
 
         @Override
         protected Void doInBackground(String... credentials) {
-            try {
-                SimbiApi.getInstance(context).doLogin(credentials[0], credentials[1]);
-            } catch (IOException ioe) { }
-            catch (JSONException e) { }
+            SimbiApi.getInstance(context).doLogin(credentials[0], credentials[1]);
             return null;
         }
 
