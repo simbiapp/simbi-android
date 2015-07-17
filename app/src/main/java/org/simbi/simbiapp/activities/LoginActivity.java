@@ -22,13 +22,10 @@ public class LoginActivity extends Activity {
     private static Context context;
     // Email, password edittext
     EditText txtUsername, txtPassword;
-
     // login button
     Button btnLogin;
-
     // Alert Dialog Manager
     AlertDialogManager alert = new AlertDialogManager();
-
     // Session Manager Class
     SessionManagement session;
 
@@ -47,7 +44,6 @@ public class LoginActivity extends Activity {
 
         Toast.makeText(getApplicationContext(), "User Login Status: " + session.isLoggedIn(), Toast.LENGTH_LONG).show();
 
-
         // Login button
         btnLogin = (Button) findViewById(R.id.btnLogin);
 
@@ -62,6 +58,7 @@ public class LoginActivity extends Activity {
                 String password = txtPassword.getText().toString().trim();
 
                 // Check if username, password is filled
+
                 if (username.trim().length() > 0 && password.trim().length() > 0) {
 
                     if (MiscUtils.hasInternetConnectivity(context)) {
@@ -76,7 +73,7 @@ public class LoginActivity extends Activity {
                     // user didn't entered username or password
                     // Show alert asking him to enter the details
                     alert.showAlertDialog(LoginActivity.this, getString(R.string.message_login_fail),
-                            "Please enter username and password",
+                            getString(R.string.message_enter_user_pass),
                             false);
                 }
 

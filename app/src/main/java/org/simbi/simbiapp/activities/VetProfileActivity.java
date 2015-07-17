@@ -43,7 +43,7 @@ public class VetProfileActivity extends AppCompatActivity {
 
     Button contactDoctor;
     AlertDialogManager alert = new AlertDialogManager();
-    boolean addedToFavourite=false;
+    boolean addedToFavourite = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,7 +118,7 @@ public class VetProfileActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_vet_profile, menu);
-        this.menu=menu;
+        this.menu = menu;
         return true;
     }
 
@@ -133,17 +133,16 @@ public class VetProfileActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
-        }
-        else if(id==R.id.add_to_fav) {
-            if(!addedToFavourite) {
-                Toast.makeText(getBaseContext(),"Added To Favourites",Toast.LENGTH_SHORT)
+        } else if (id == R.id.add_to_fav) {
+            if (!addedToFavourite) {
+                Toast.makeText(getBaseContext(), "Added To Favourites", Toast.LENGTH_SHORT)
                         .show();
-                addedToFavourite=true;
+                addedToFavourite = true;
                 menu.findItem(R.id.add_to_fav).setIcon(R.drawable.ic_fab_star);
             } else {
-                Toast.makeText(getBaseContext(),"Removed From Favourites",Toast.LENGTH_SHORT)
+                Toast.makeText(getBaseContext(), "Removed From Favourites", Toast.LENGTH_SHORT)
                         .show();
-                addedToFavourite=false;
+                addedToFavourite = false;
                 menu.findItem(R.id.add_to_fav).setIcon(R.drawable.ic_fab_star_off);
             }
         }
