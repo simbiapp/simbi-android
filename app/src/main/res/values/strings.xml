@@ -10,7 +10,7 @@
     <string name="label_logout">Logout</string>
     <string name="label_fb_login">Enter with Facebook</string>
     <string name="message_internet_disconnected">Please Check Internet Connectivity</string>
-    <string name="message_login_fail">Login failed..</string>
+    <string name="message_login_fail">Login Failed..</string>
     <string name="message_enter_user_pass">Please enter username and password</string>
     <!-- Dashboard menus -->
     <string name="ask_a_question">Ask a Question</string>

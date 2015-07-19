@@ -44,7 +44,7 @@ public class VetListActivity extends AppCompatActivity implements SwipeRefreshLa
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_doctor_list);
         setSupportActionBar(toolBar);
 
-        swipeRefreshLayout.setColorSchemeColors(R.color.color_primary,R.color.color_primary_lightgit );
+        swipeRefreshLayout.setColorSchemeColors(R.color.color_primary, R.color.color_primary_light);
         swipeRefreshLayout.setOnRefreshListener(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(VetListActivity.this));
 

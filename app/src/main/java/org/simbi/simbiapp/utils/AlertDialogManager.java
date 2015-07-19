@@ -4,9 +4,8 @@ package org.simbi.simbiapp.utils;
  * Created by codeadict on 6/29/15.
  */
 
-import android.app.AlertDialog;
+import android.support.v7.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 
 public class AlertDialogManager {
     /**
@@ -31,12 +30,6 @@ public class AlertDialogManager {
         if (status != null)
             // Setting alert dialog icon
             //alertDialog.setIcon((status) ? R.drawable.success : R.drawable.fail);
-
-            // Setting OK Button
-            alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                }
-            });
 
         // Showing Alert Message
         alertDialog.show();
