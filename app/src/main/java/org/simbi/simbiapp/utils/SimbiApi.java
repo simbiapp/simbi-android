@@ -38,6 +38,8 @@ public class SimbiApi implements Constants {
     private SharedPreferences prefs;
     private OkHttpClient client;
 
+    private Gson gson = new Gson();
+
     private SimbiApi(Context ctx) {
         this.context = ctx;
         client = new OkHttpClient();
@@ -113,7 +115,6 @@ public class SimbiApi implements Constants {
             Response response = client.newCall(request).execute();
             String str = response.body().string();
 
-            Gson gson = new Gson();
             doctors = gson.fromJson(str, Doctor[].class);
 
         } catch (IOException ioe) {
@@ -137,7 +138,6 @@ public class SimbiApi implements Constants {
             Response response = client.newCall(request).execute();
             String result = response.body().string();
 
-            Gson gson = new Gson();
             doctor = gson.fromJson(result, Doctor.class);
         } catch (IOException io) {
             io.printStackTrace();
@@ -145,6 +145,23 @@ public class SimbiApi implements Constants {
             j.printStackTrace();
         }
         return doctor;
+    }
+
+    /**
+     * Function to retrieve all Pets
+     */
+    public List<Pet> getAllPets() {
+        Pet[] pets = null;
+        try {
+            Request request = buildGetRequestWithAuthToken(PETS);
+            Response response = client.newCall(request).execute();
+            String result = response.body().string();
+
+            pets = gson.fromJson(result, Pet[].class);
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+        return Arrays.asList(pets);
     }
 
     /**
