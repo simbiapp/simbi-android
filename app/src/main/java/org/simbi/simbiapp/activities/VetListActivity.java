@@ -3,6 +3,7 @@ package org.simbi.simbiapp.activities;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,15 +19,16 @@ import org.simbi.simbiapp.adapters.VetListAdapter;
 import org.simbi.simbiapp.utils.AlertDialogManager;
 import org.simbi.simbiapp.utils.MiscUtils;
 
-public class VetListActivity extends AppCompatActivity {
+public class VetListActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     private Toolbar toolBar;
-
+    private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView mRecyclerView;
 
     private FloatingActionMenu floatingActionMenu;
 
     private View transparentOverlay;
+
 
     private AlertDialogManager alert = new AlertDialogManager();
 
@@ -39,8 +41,11 @@ public class VetListActivity extends AppCompatActivity {
         mRecyclerView = (RecyclerView) findViewById(R.id.vet_list_recycler_view);
         floatingActionMenu = (FloatingActionMenu) findViewById(R.id.floating_menu_filter);
         transparentOverlay = findViewById(R.id.transparent_overlay_view);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_doctor_list);
         setSupportActionBar(toolBar);
 
+        swipeRefreshLayout.setColorSchemeColors(R.color.color_primary,R.color.color_primary_lightgit );
+        swipeRefreshLayout.setOnRefreshListener(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(VetListActivity.this));
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -91,6 +96,11 @@ public class VetListActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onRefresh() {
+        new FetchAllDoctorsTask().execute();
+    }
+
     private class FetchAllDoctorsTask extends AsyncTask<Void, Void, Void> {
 
         VetListAdapter adapter;
@@ -115,6 +125,7 @@ public class VetListActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             dialog.dismiss();
+            swipeRefreshLayout.setRefreshing(false);
             mRecyclerView.setAdapter(adapter);
         }
     }
