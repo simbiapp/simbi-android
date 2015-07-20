@@ -73,7 +73,6 @@ public class LoginActivity extends Activity {
                             getString(R.string.message_enter_user_pass),
                             false);
                 }
-
             }
         });
     }
