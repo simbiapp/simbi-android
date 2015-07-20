@@ -64,14 +64,7 @@ public class VetListActivity extends AppCompatActivity implements SwipeRefreshLa
                 }
             }
         });
-
-        if (MiscUtils.hasInternetConnectivity(getBaseContext())) {
-            //populate recycler view with data asynchronously
-            new FetchAllDoctorsTask().execute();
-        } else {
-            alert.showAlertDialog(VetListActivity.this, getString(R.string.message_login_fail),
-                    getString(R.string.message_internet_disconnected), true);
-        }
+        refreshDoctorsList();
     }
 
     @Override
@@ -98,7 +91,7 @@ public class VetListActivity extends AppCompatActivity implements SwipeRefreshLa
 
     @Override
     public void onRefresh() {
-        new FetchAllDoctorsTask().execute();
+        refreshDoctorsList();
     }
 
     private class FetchAllDoctorsTask extends AsyncTask<Void, Void, Void> {
@@ -127,6 +120,17 @@ public class VetListActivity extends AppCompatActivity implements SwipeRefreshLa
             dialog.dismiss();
             swipeRefreshLayout.setRefreshing(false);
             mRecyclerView.setAdapter(adapter);
+        }
+    }
+
+    public void refreshDoctorsList() {
+
+        if (MiscUtils.hasInternetConnectivity(getBaseContext())) {
+            //populate recycler view with data asynchronously
+            new FetchAllDoctorsTask().execute();
+        } else {
+            alert.showAlertDialog(VetListActivity.this, getString(R.string.message_login_fail),
+                    getString(R.string.message_internet_disconnected), true);
         }
     }
 
