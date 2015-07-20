@@ -34,9 +34,12 @@ public class SimbiApi implements Constants {
     private static String PETS = baseApiUrl + "/pets/";
     private static String QUESTIONS = baseApiUrl + "/question/";
 
+    private static String STATUS_OK = "1";
+
     private Context context;
     private SharedPreferences prefs;
     private OkHttpClient client;
+
 
     private Gson gson = new Gson();
 
@@ -52,14 +55,14 @@ public class SimbiApi implements Constants {
         return simbiApi;
     }
 
-
     /**
      * Function to login into Simbi
+     * returns true if login is successful
      *
      * @param user - Username
      * @param pass - Password
      */
-    public void doLogin(String user, String pass) {
+    public boolean doLogin(String user, String pass) {
         //posting a json object with username and password
         //to get authentication token
         try {
@@ -74,15 +77,29 @@ public class SimbiApi implements Constants {
                     .build();
             Response response = client.newCall(request).execute();
             String result = response.body().string();
-            String token = new JSONObject(result).getString("token");
 
-            //creating login session
-            SessionManagement sessionManagement = new SessionManagement(context);
-            sessionManagement.createLoginSession(user, token);
+            JSONObject jsonResult = new JSONObject(result);
+            String status = jsonResult.getString("status");
+
+            if (status.equals(STATUS_OK)) {
+                String token = jsonResult.getString("token");
+
+                if (token != null && token.length() > 0) {
+                    //creating login session
+                    SessionManagement sessionManagement = new SessionManagement(context);
+                    sessionManagement.createLoginSession(user, token);
+                    //login success
+                    return true;
+                }
+            }
         } catch (JSONException j) {
+            j.printStackTrace();
         } catch (IOException ioe) {
+            ioe.printStackTrace();
         }
 
+        //Login Fail wrong username password
+        return false;
     }
 
     /**

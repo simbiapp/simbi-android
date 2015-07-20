@@ -42,11 +42,8 @@ public class LoginActivity extends Activity {
         txtUsername = (EditText) findViewById(R.id.edtUserName);
         txtPassword = (EditText) findViewById(R.id.edtPassword);
 
-        Toast.makeText(getApplicationContext(), "User Login Status: " + session.isLoggedIn(), Toast.LENGTH_LONG).show();
-
         // Login button
         btnLogin = (Button) findViewById(R.id.btnLogin);
-
 
         // Login button click event
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -81,7 +78,7 @@ public class LoginActivity extends Activity {
         });
     }
 
-    private class LoginTask extends AsyncTask<String, Void, Void> {
+    private class LoginTask extends AsyncTask<String, Void, Boolean> {
 
         SessionManagement sessionManagement;
         ProgressDialog dialog;
@@ -96,22 +93,25 @@ public class LoginActivity extends Activity {
         }
 
         @Override
-        protected Void doInBackground(String... credentials) {
-            SimbiApi.getInstance(context).doLogin(credentials[0], credentials[1]);
-            return null;
+        protected Boolean doInBackground(String... credentials) {
+            boolean loginStatus = SimbiApi.getInstance(context).doLogin(credentials[0], credentials[1]);
+            return loginStatus;
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
+        protected void onPostExecute(Boolean loginStatus) {
+            super.onPostExecute(loginStatus);
 
             dialog.dismiss();
-            sessionManagement = new SessionManagement(context);
-            if (sessionManagement.isLoggedIn()) {
+
+            if (loginStatus) {
                 Intent i = new Intent(context, MainActivity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);
                 finish();
+            } else {
+                Toast.makeText(getBaseContext(), getString(R.string.message_enter_correct_credentials),
+                        Toast.LENGTH_SHORT).show();
             }
         }
     }

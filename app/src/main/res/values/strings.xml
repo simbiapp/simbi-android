@@ -12,6 +12,7 @@
     <string name="message_internet_disconnected">Please Check Internet Connectivity</string>
     <string name="message_login_fail">Login Failed..</string>
     <string name="message_enter_user_pass">Please enter username and password</string>
+    <string name="message_enter_correct_credentials">Please enter correct username and password</string>
     <!-- Dashboard menus -->
     <string name="ask_a_question">Ask a Question</string>
     <string name="user_pets_profiles">Your Pet\'s Profiles</string>
