@@ -15,7 +15,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activities.MainActivity"
-            android:label="@string/app_name"></activity>
+            android:label="@string/app_name" />
         <activity
             android:name=".activities.LoginActivity"
             android:label="User Login" />
@@ -48,6 +48,14 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.VetListActivity" />
+        </activity>
+        <activity
+            android:name=".activities.QuestionsActivity"
+            android:label="@string/title_activity_questions"
+            android:parentActivityName=".activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.simbi.simbiapp.activities.MainActivity" />
         </activity>
     </application>
 

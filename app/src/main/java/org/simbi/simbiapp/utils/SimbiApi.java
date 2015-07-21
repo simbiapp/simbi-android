@@ -181,6 +181,20 @@ public class SimbiApi implements Constants {
         return Arrays.asList(pets);
     }
 
+    public List<Question> getAllQuestions() {
+        Question[] questions = null;
+        try {
+            Request request = buildGetRequestWithAuthToken(QUESTIONS);
+            Response response = client.newCall(request).execute();
+            String result = response.body().string();
+
+            questions = gson.fromJson(result, Question[].class);
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+        return Arrays.asList(questions);
+    }
+
     /**
      * Function to build a GET Request object
      * with authentication token in its header

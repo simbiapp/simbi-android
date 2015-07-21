@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
     //Linear layout is acting as a button
     LinearLayout searchVetProfile;
+    LinearLayout askQuestions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
         toolBar = (Toolbar) findViewById(R.id.toolbar);
         searchVetProfile = (LinearLayout) findViewById(R.id.search_vet_profile_button);
+        askQuestions = (LinearLayout) findViewById(R.id.question_button);
         setSupportActionBar(toolBar);
 
         session = new SessionManagement(getApplicationContext());
@@ -55,6 +57,13 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, VetListActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        askQuestions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, QuestionsActivity.class));
             }
         });
     }
