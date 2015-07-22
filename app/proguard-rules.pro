@@ -16,3 +16,4 @@
 #   public *;
 #}
 -dontwarn okio.**
+-dontwarn retrofit.**
