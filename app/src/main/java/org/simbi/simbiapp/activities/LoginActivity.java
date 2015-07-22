@@ -76,7 +76,7 @@ public class LoginActivity extends Activity implements Constants {
 
                     if (MiscUtils.hasInternetConnectivity(context)) {
 
-                        dialog = new ProgressDialog(context);
+                        dialog = new ProgressDialog(LoginActivity.this);
                         dialog.setMessage("Please Wait");
                         dialog.setIndeterminate(true);
                         dialog.show();
@@ -142,8 +142,9 @@ public class LoginActivity extends Activity implements Constants {
 
                             //login success starting main activity
                             Intent i = new Intent(context, MainActivity.class);
-                            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             context.startActivity(i);
+                            finish();
                         }
                     } else {
                         Toast.makeText(context, "Wrong Username or Password", Toast.LENGTH_SHORT)
@@ -157,9 +158,7 @@ public class LoginActivity extends Activity implements Constants {
             @Override
             public void failure(RetrofitError error) {
                 dialog.dismiss();
-                if (BuildConfig.DEBUG) {
-                    error.printStackTrace();
-                }
+
                 Toast.makeText(context, "Login Failed", Toast.LENGTH_SHORT)
                         .show();
             }
