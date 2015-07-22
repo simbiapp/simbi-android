@@ -13,9 +13,8 @@ import com.squareup.picasso.Picasso;
 
 import org.simbi.simbiapp.R;
 import org.simbi.simbiapp.activities.VetProfileActivity;
+import org.simbi.simbiapp.models.Doctor;
 import org.simbi.simbiapp.utils.Constants;
-import org.simbi.simbiapp.utils.Doctor;
-import org.simbi.simbiapp.utils.SimbiApi;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,10 +24,9 @@ public class VetListAdapter extends RecyclerView.Adapter<VetListAdapter.ViewHold
     Context context;
     List<Doctor> doctors = new ArrayList<>();
 
-    public VetListAdapter(Context context) {
+    public VetListAdapter(Context context, List<Doctor> doctors) {
         this.context = context;
-        SimbiApi simbiApi = SimbiApi.getInstance(context);
-        doctors = simbiApi.getAllDoctors();
+        this.doctors = doctors;
     }
 
     @Override

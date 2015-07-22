@@ -4,20 +4,33 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.simbi.simbiapp.BuildConfig;
 import org.simbi.simbiapp.R;
+import org.simbi.simbiapp.SimbiApp;
 import org.simbi.simbiapp.utils.AlertDialogManager;
+import org.simbi.simbiapp.utils.Constants;
 import org.simbi.simbiapp.utils.MiscUtils;
 import org.simbi.simbiapp.utils.SessionManagement;
 import org.simbi.simbiapp.utils.SimbiApi;
 
-public class LoginActivity extends Activity {
+import java.io.UnsupportedEncodingException;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.mime.TypedByteArray;
+import retrofit.mime.TypedInput;
+
+public class LoginActivity extends Activity implements Constants {
 
     private static Context context;
     // Email, password edittext
@@ -29,6 +42,8 @@ public class LoginActivity extends Activity {
     // Session Manager Class
     SessionManagement session;
 
+    ProgressDialog dialog;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +51,7 @@ public class LoginActivity extends Activity {
 
         // Session Manager
         session = new SessionManagement(getApplicationContext());
+
         context = getBaseContext();
 
         // Email, Password input text
@@ -56,10 +72,16 @@ public class LoginActivity extends Activity {
 
                 // Check if username, password is filled
 
-                if (username.trim().length() > 0 && password.trim().length() > 0) {
+                if (username.length() > 0 && password.length() > 0) {
 
                     if (MiscUtils.hasInternetConnectivity(context)) {
-                        new LoginTask().execute(username.trim(), password.trim());
+
+                        dialog = new ProgressDialog(context);
+                        dialog.setMessage("Please Wait");
+                        dialog.setIndeterminate(true);
+                        dialog.show();
+
+                        doLogin(username, password);
                     } else {
                         // does not have internet connectivity
                         alert.showAlertDialog(LoginActivity.this, getString(R.string.message_login_fail),
@@ -75,43 +97,74 @@ public class LoginActivity extends Activity {
                 }
             }
         });
+
     }
 
-    private class LoginTask extends AsyncTask<String, Void, Boolean> {
+    private void doLogin(final String user, final String pass) {
 
-        SessionManagement sessionManagement;
-        ProgressDialog dialog;
+        SimbiApi apiService = ((SimbiApp) getApplication()).getSimbiApiService();
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            dialog = new ProgressDialog(LoginActivity.this);
-            dialog.setMessage("Please Wait");
-            dialog.setIndeterminate(true);
-            dialog.show();
+        JSONObject credentials = new JSONObject();
+        TypedInput inputJson = null; //we are posting input json as raw data
+
+        try {
+            credentials.put("username", user);
+            credentials.put("password", pass);
+
+            inputJson = new TypedByteArray("application/json", credentials.toString().getBytes("UTF-8"));
+        } catch (JSONException j) {
+            j.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
 
-        @Override
-        protected Boolean doInBackground(String... credentials) {
-            boolean loginStatus = SimbiApi.getInstance(context).doLogin(credentials[0], credentials[1]);
-            return loginStatus;
-        }
+        apiService.loginToSimbi(inputJson, new Callback<Object>() {
+            @Override
+            public void success(Object object, retrofit.client.Response response) {
 
-        @Override
-        protected void onPostExecute(Boolean loginStatus) {
-            super.onPostExecute(loginStatus);
+                String result = new Gson().toJson(object); //this is the response json
 
-            dialog.dismiss();
+                dialog.dismiss();
+                JSONObject jsonResult = null;
+                try {
+                    jsonResult = new JSONObject(result);
 
-            if (loginStatus) {
-                Intent i = new Intent(context, MainActivity.class);
-                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(i);
-                finish();
-            } else {
-                Toast.makeText(getBaseContext(), getString(R.string.message_enter_correct_credentials),
-                        Toast.LENGTH_SHORT).show();
+                    String status = jsonResult.getString("status");
+
+                    if (status.equals(SimbiApi.STATUS_OK)) {
+                        String token = jsonResult.getString("token");
+
+                        if (token != null && token.length() > 0) {
+                            //creating login session
+                            SessionManagement sessionManagement = new SessionManagement(context);
+                            sessionManagement.createLoginSession(user,
+                                    token);
+
+                            //login success starting main activity
+                            Intent i = new Intent(context, MainActivity.class);
+                            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            context.startActivity(i);
+                        }
+                    } else {
+                        Toast.makeText(context, "Wrong Username or Password", Toast.LENGTH_SHORT)
+                                .show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
-        }
+
+            @Override
+            public void failure(RetrofitError error) {
+                dialog.dismiss();
+                if (BuildConfig.DEBUG) {
+                    error.printStackTrace();
+                }
+                Toast.makeText(context, "Login Failed", Toast.LENGTH_SHORT)
+                        .show();
+            }
+        });
     }
+
+
 }

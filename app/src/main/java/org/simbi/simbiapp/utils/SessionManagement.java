@@ -28,8 +28,6 @@ public class SessionManagement {
     Editor editor;
     // Context
     Context _context;
-    // Shared pref mode
-    int PRIVATE_MODE = 0;
 
     // Constructor
     public SessionManagement(Context context) {

@@ -4,9 +4,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-/**
- * Created by rahul on 16/7/15.
- */
 public class MiscUtils {
 
     public static boolean hasInternetConnectivity(Context context) {

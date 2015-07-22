@@ -12,7 +12,7 @@ import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 
 import org.simbi.simbiapp.R;
-import org.simbi.simbiapp.utils.Question;
+import org.simbi.simbiapp.models.Question;
 
 import java.util.List;
 

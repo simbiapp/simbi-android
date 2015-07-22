@@ -1,8 +1,9 @@
 package org.simbi.simbiapp.activities;
 
 import android.app.ProgressDialog;
-import android.os.AsyncTask;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,9 +16,18 @@ import android.view.View;
 import com.github.clans.fab.FloatingActionMenu;
 
 import org.simbi.simbiapp.R;
+import org.simbi.simbiapp.SimbiApp;
 import org.simbi.simbiapp.adapters.VetListAdapter;
+import org.simbi.simbiapp.models.Doctor;
 import org.simbi.simbiapp.utils.AlertDialogManager;
 import org.simbi.simbiapp.utils.MiscUtils;
+import org.simbi.simbiapp.utils.SessionManagement;
+import org.simbi.simbiapp.utils.SimbiApi;
+
+import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
 
 public class VetListActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -27,9 +37,11 @@ public class VetListActivity extends AppCompatActivity implements SwipeRefreshLa
 
     private FloatingActionMenu floatingActionMenu;
 
-    private View transparentOverlay;
+    private View transparentOverlay; //semi transparent overlay
 
     private AlertDialogManager alert = new AlertDialogManager();
+    private SharedPreferences prefs;
+    private ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +54,7 @@ public class VetListActivity extends AppCompatActivity implements SwipeRefreshLa
         transparentOverlay = findViewById(R.id.transparent_overlay_view);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_doctor_list);
         setSupportActionBar(toolBar);
+        prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
         swipeRefreshLayout.setColorSchemeColors(R.color.color_primary, R.color.color_primary_light);
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -63,6 +76,7 @@ public class VetListActivity extends AppCompatActivity implements SwipeRefreshLa
                 }
             }
         });
+
         refreshDoctorsList();
     }
 
@@ -93,44 +107,51 @@ public class VetListActivity extends AppCompatActivity implements SwipeRefreshLa
         refreshDoctorsList();
     }
 
-    public void refreshDoctorsList() {
-
+    private void refreshDoctorsList() {
         if (MiscUtils.hasInternetConnectivity(getBaseContext())) {
-            //populate recycler view with data asynchronously
-            new FetchAllDoctorsTask().execute();
+
+            dialog = new ProgressDialog(VetListActivity.this);
+            dialog.setMessage("Please Wait");
+            dialog.setIndeterminate(true);
+            dialog.show();
+            //populate doctors list
+            populateDoctorsList();
+
         } else {
             alert.showAlertDialog(VetListActivity.this, getString(R.string.message_login_fail),
                     getString(R.string.message_internet_disconnected), true);
         }
     }
 
-    private class FetchAllDoctorsTask extends AsyncTask<Void, Void, Void> {
+    public void populateDoctorsList() {
 
-        VetListAdapter adapter;
-        ProgressDialog dialog;
+        SimbiApi apiService = ((SimbiApp) getApplication()).getSimbiApiService();
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            dialog = new ProgressDialog(VetListActivity.this);
-            dialog.setMessage("Please Wait");
-            dialog.setIndeterminate(true);
-            dialog.show();
-        }
+        String token = prefs.getString(SessionManagement.KEY_AUTH_TOKEN, "");
+        if (token != null && token.length() > 0) {
 
-        @Override
-        protected Void doInBackground(Void... voids) {
-            adapter = new VetListAdapter(getBaseContext());
-            return null;
-        }
+            apiService.getAllDoctors("Token " + token, new Callback<List<Doctor>>() {
 
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            dialog.dismiss();
-            swipeRefreshLayout.setRefreshing(false);
-            mRecyclerView.setAdapter(adapter);
+                @Override
+                public void success(List<Doctor> doctors, retrofit.client.Response response) {
+                    if (doctors != null && doctors.size() > 0) {
+
+                        VetListAdapter adapter = new VetListAdapter(getBaseContext(), doctors);
+                        mRecyclerView.setAdapter(adapter);
+
+                        dialog.dismiss();
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+
+                    dialog.dismiss();
+                    swipeRefreshLayout.setRefreshing(false);
+
+                }
+            });
         }
     }
-
 }

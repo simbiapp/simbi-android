@@ -1,8 +1,9 @@
 package org.simbi.simbiapp.activities;
 
 import android.app.ProgressDialog;
-import android.os.AsyncTask;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -16,12 +17,24 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.simbi.simbiapp.R;
+import org.simbi.simbiapp.SimbiApp;
+import org.simbi.simbiapp.models.Doctor;
 import org.simbi.simbiapp.utils.AlertDialogManager;
 import org.simbi.simbiapp.utils.Constants;
-import org.simbi.simbiapp.utils.Doctor;
 import org.simbi.simbiapp.utils.MiscUtils;
+import org.simbi.simbiapp.utils.SessionManagement;
 import org.simbi.simbiapp.utils.SimbiApi;
+
+import java.io.UnsupportedEncodingException;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
+import retrofit.mime.TypedInput;
 
 public class VetProfileActivity extends AppCompatActivity {
 
@@ -43,6 +56,8 @@ public class VetProfileActivity extends AppCompatActivity {
 
     Button contactDoctor;
     AlertDialogManager alert = new AlertDialogManager();
+    SharedPreferences prefs;
+    ProgressDialog dialog;
     boolean addedToFavourite = false;
 
     @Override
@@ -69,19 +84,20 @@ public class VetProfileActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
         biographyLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (biographyDetailsTextView.getVisibility() == View.GONE) {
                     biographyDetailsTextView.setVisibility(View.VISIBLE);
-                    biographyTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_biography,
-                            0,
+                    biographyTextView.setCompoundDrawablesWithIntrinsicBounds(
+                            R.drawable.ic_biography, 0,
                             R.drawable.ic_expand_down, 0);
                 } else {
                     biographyDetailsTextView.setVisibility(View.GONE);
-                    biographyTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_biography,
-                            0,
+                    biographyTextView.setCompoundDrawablesWithIntrinsicBounds(
+                            R.drawable.ic_biography, 0,
                             R.drawable.ic_expand_right, 0);
                 }
             }
@@ -92,21 +108,30 @@ public class VetProfileActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (languageDetailsTextView.getVisibility() == View.GONE) {
                     languageDetailsTextView.setVisibility(View.VISIBLE);
-                    languageTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_language,
-                            0, R.drawable.ic_expand_down, 0);
+                    languageTextView.setCompoundDrawablesWithIntrinsicBounds(
+                            R.drawable.ic_language, 0,
+                            R.drawable.ic_expand_down, 0);
                 } else {
                     languageDetailsTextView.setVisibility(View.GONE);
-                    languageTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_language,
-                            0,
+                    languageTextView.setCompoundDrawablesWithIntrinsicBounds(
+                            R.drawable.ic_language, 0,
                             R.drawable.ic_expand_right, 0);
                 }
             }
         });
+
         String doctorId = getIntent().getStringExtra(Constants.BUNDLE_DOC_ID);
 
         if (doctorId != null && doctorId.length() != 0) {
             if (MiscUtils.hasInternetConnectivity(getBaseContext())) {
-                new FetchDoctorDetailsTask().execute(doctorId);
+
+                dialog = new ProgressDialog(VetProfileActivity.this);
+                dialog.setMessage("Please Wait");
+                dialog.setIndeterminate(true);
+                dialog.show();
+
+                populateDoctorDetails(doctorId);
+
             } else {
                 alert.showAlertDialog(getBaseContext(), getString(R.string.message_login_fail),
                         getString(R.string.message_internet_disconnected), false);
@@ -150,39 +175,53 @@ public class VetProfileActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class FetchDoctorDetailsTask extends AsyncTask<String, Void, Doctor> {
+    private void populateDoctorDetails(String doctorId) {
 
-        ProgressDialog dialog;
+        SimbiApi apiService = ((SimbiApp) getApplication()).getSimbiApiService();
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            dialog = new ProgressDialog(VetProfileActivity.this);
-            dialog.setMessage("Please Wait");
-            dialog.setIndeterminate(true);
-            dialog.show();
+        String token = prefs.getString(SessionManagement.KEY_AUTH_TOKEN, "");
+        TypedInput inputJson = null; //we are posting input json as raw data
+        JSONObject postData = new JSONObject();
+
+        try {
+
+            postData.put("id", doctorId);
+            inputJson = new TypedByteArray("application/json",
+                    postData.toString().getBytes("UTF-8"));
+
+        } catch (JSONException j) {
+            j.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
 
-        @Override
-        protected Doctor doInBackground(String... strings) {
-            Doctor doctor = SimbiApi.getInstance(getBaseContext()).getDoctorById(strings[0]);
-            return doctor;
-        }
+        if (token != null && token.length() > 0) {
+            apiService.getDoctorById(inputJson, "Token " + token, new Callback<Doctor>() {
 
-        @Override
-        protected void onPostExecute(Doctor doctor) {
-            super.onPostExecute(doctor);
-            if (doctor != null) {
-                //populate ui with data from Doctor object
-                Picasso.with(getBaseContext())
-                        .load(doctor.getPhoto())
-                        .into(doctorImageView);
-                getSupportActionBar().setTitle("Dr Jane Doe");
-                doctorSpecialization.setText(doctor.getSpecialization());
-                experience.setText(doctor.getExperience());
-                languageDetailsTextView.setText(doctor.getLanguage());
-            }
-            dialog.dismiss();
+                @Override
+                public void success(Doctor doctor, Response response) {
+
+                    if (doctor != null) {
+
+                        //populate ui with data from Doctor object
+                        Picasso.with(getBaseContext())
+                                .load(doctor.getPhoto())
+                                .into(doctorImageView);
+
+                        getSupportActionBar().setTitle("Dr Jane Doe");
+                        doctorSpecialization.setText(doctor.getSpecialization());
+                        experience.setText(doctor.getExperience());
+                        languageDetailsTextView.setText(doctor.getLanguage());
+
+                    }
+                    dialog.dismiss();
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    dialog.dismiss();
+                }
+            });
         }
     }
 }
