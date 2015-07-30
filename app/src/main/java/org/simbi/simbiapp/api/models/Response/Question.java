@@ -1,4 +1,4 @@
-package org.simbi.simbiapp.models;
+package org.simbi.simbiapp.api.models.Response;
 
 
 import com.google.gson.annotations.SerializedName;

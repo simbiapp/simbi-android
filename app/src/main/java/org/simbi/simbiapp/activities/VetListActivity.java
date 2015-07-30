@@ -12,22 +12,20 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionMenu;
+import com.squareup.otto.Subscribe;
 
 import org.simbi.simbiapp.R;
-import org.simbi.simbiapp.SimbiApp;
 import org.simbi.simbiapp.adapters.VetListAdapter;
-import org.simbi.simbiapp.models.Doctor;
+import org.simbi.simbiapp.api.interafaces.DoctorsClient;
+import org.simbi.simbiapp.api.retrofit.RetrofitDoctorsClient;
+import org.simbi.simbiapp.events.doctors.DoctorsListEvent;
+import org.simbi.simbiapp.events.doctors.DoctorsListFailedEvent;
 import org.simbi.simbiapp.utils.AlertDialogManager;
-import org.simbi.simbiapp.utils.MiscUtils;
 import org.simbi.simbiapp.utils.SessionManagement;
-import org.simbi.simbiapp.utils.SimbiApi;
-
-import java.util.List;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
+import org.simbi.simbiapp.utils.Utils;
 
 public class VetListActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -43,6 +41,8 @@ public class VetListActivity extends AppCompatActivity implements SwipeRefreshLa
     private SharedPreferences prefs;
     private ProgressDialog dialog;
 
+    private DoctorsClient doctorsClient;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +55,7 @@ public class VetListActivity extends AppCompatActivity implements SwipeRefreshLa
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_doctor_list);
         setSupportActionBar(toolBar);
         prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        doctorsClient = RetrofitDoctorsClient.getClient(getBaseContext());
 
         swipeRefreshLayout.setColorSchemeColors(R.color.color_primary, R.color.color_primary_light);
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -76,7 +77,6 @@ public class VetListActivity extends AppCompatActivity implements SwipeRefreshLa
                 }
             }
         });
-
         refreshDoctorsList();
     }
 
@@ -108,14 +108,18 @@ public class VetListActivity extends AppCompatActivity implements SwipeRefreshLa
     }
 
     private void refreshDoctorsList() {
-        if (MiscUtils.hasInternetConnectivity(getBaseContext())) {
+        if (Utils.hasInternetConnectivity(getBaseContext())) {
 
             dialog = new ProgressDialog(VetListActivity.this);
             dialog.setMessage("Please Wait");
             dialog.setIndeterminate(true);
             dialog.show();
             //populate doctors list
-            populateDoctorsList();
+            String token = prefs.getString(SessionManagement.KEY_AUTH_TOKEN, "");
+
+            doctorsClient.getBus().register(new DoctorsListenerEvent());
+            doctorsClient.getDoctors(token);
+
 
         } else {
             alert.showAlertDialog(VetListActivity.this, getString(R.string.message_login_fail),
@@ -123,35 +127,26 @@ public class VetListActivity extends AppCompatActivity implements SwipeRefreshLa
         }
     }
 
-    public void populateDoctorsList() {
+    private class DoctorsListenerEvent {
 
-        SimbiApi apiService = ((SimbiApp) getApplication()).getSimbiApiService();
+        @Subscribe
+        public void onDoctorsListReceived(DoctorsListEvent event) {
 
-        String token = prefs.getString(SessionManagement.KEY_AUTH_TOKEN, "");
-        if (token != null && token.length() > 0) {
+            doctorsClient.getBus().unregister(this);
+            dialog.dismiss();
+            swipeRefreshLayout.setRefreshing(false);
 
-            apiService.getAllDoctors("Token " + token, new Callback<List<Doctor>>() {
+            mRecyclerView.setAdapter(new VetListAdapter(getBaseContext(),
+                    event.getDoctors()));
+        }
 
-                @Override
-                public void success(List<Doctor> doctors, retrofit.client.Response response) {
-                    if (doctors != null && doctors.size() > 0) {
+        @Subscribe
+        public void onDoctorsListFailed(DoctorsListFailedEvent event) {
+            dialog.dismiss();
 
-                        VetListAdapter adapter = new VetListAdapter(getBaseContext(), doctors);
-                        mRecyclerView.setAdapter(adapter);
-
-                        dialog.dismiss();
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-
-                    dialog.dismiss();
-                    swipeRefreshLayout.setRefreshing(false);
-
-                }
-            });
+            doctorsClient.getBus().unregister(this);
+            Toast.makeText(getBaseContext(), "Something Went Wrong", Toast.LENGTH_SHORT)
+                    .show();
         }
     }
 }

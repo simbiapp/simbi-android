@@ -15,26 +15,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.simbi.simbiapp.R;
-import org.simbi.simbiapp.SimbiApp;
-import org.simbi.simbiapp.models.Doctor;
+import org.simbi.simbiapp.api.interafaces.DoctorsClient;
+import org.simbi.simbiapp.api.retrofit.RetrofitDoctorsClient;
+import org.simbi.simbiapp.events.doctors.DoctorProfileEvent;
+import org.simbi.simbiapp.events.doctors.DoctorProfileFailedEvent;
 import org.simbi.simbiapp.utils.AlertDialogManager;
-import org.simbi.simbiapp.utils.Constants;
-import org.simbi.simbiapp.utils.MiscUtils;
 import org.simbi.simbiapp.utils.SessionManagement;
-import org.simbi.simbiapp.utils.SimbiApi;
-
-import java.io.UnsupportedEncodingException;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-import retrofit.mime.TypedByteArray;
-import retrofit.mime.TypedInput;
+import org.simbi.simbiapp.utils.SimbiConstants;
+import org.simbi.simbiapp.utils.Utils;
 
 public class VetProfileActivity extends AppCompatActivity {
 
@@ -60,6 +52,8 @@ public class VetProfileActivity extends AppCompatActivity {
     ProgressDialog dialog;
     boolean addedToFavourite = false;
 
+    DoctorsClient doctorsClient;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +74,8 @@ public class VetProfileActivity extends AppCompatActivity {
         languagesLayout = (LinearLayout) findViewById(R.id.layout_languages);
         languageDetailsTextView = (TextView) findViewById(R.id.languages_details);
         languageTextView = (TextView) findViewById(R.id.language_textview);
+
+        doctorsClient = RetrofitDoctorsClient.getClient(getBaseContext());
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -120,17 +116,21 @@ public class VetProfileActivity extends AppCompatActivity {
             }
         });
 
-        String doctorId = getIntent().getStringExtra(Constants.BUNDLE_DOC_ID);
+        String doctorId = getIntent().getStringExtra(SimbiConstants.BUNDLE_DOC_ID);
 
         if (doctorId != null && doctorId.length() != 0) {
-            if (MiscUtils.hasInternetConnectivity(getBaseContext())) {
+            if (Utils.hasInternetConnectivity(getBaseContext())) {
 
                 dialog = new ProgressDialog(VetProfileActivity.this);
                 dialog.setMessage("Please Wait");
                 dialog.setIndeterminate(true);
                 dialog.show();
 
-                populateDoctorDetails(doctorId);
+                doctorsClient.getBus().register(new VetProfileListener());
+
+                String token = prefs.getString(SessionManagement.KEY_AUTH_TOKEN, "");
+
+                doctorsClient.getDoctorsById(doctorId, token);
 
             } else {
                 alert.showAlertDialog(getBaseContext(), getString(R.string.message_login_fail),
@@ -175,53 +175,29 @@ public class VetProfileActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void populateDoctorDetails(String doctorId) {
+    private class VetProfileListener {
 
-        SimbiApi apiService = ((SimbiApp) getApplication()).getSimbiApiService();
+        @Subscribe
+        public void onProfileReceived(DoctorProfileEvent event) {
+            dialog.dismiss();
 
-        String token = prefs.getString(SessionManagement.KEY_AUTH_TOKEN, "");
-        TypedInput inputJson = null; //we are posting input json as raw data
-        JSONObject postData = new JSONObject();
+            Picasso.with(getBaseContext())
+                    .load(event.getDoctor().getPhoto())
+                    .into(doctorImageView);
 
-        try {
-
-            postData.put("id", doctorId);
-            inputJson = new TypedByteArray("application/json",
-                    postData.toString().getBytes("UTF-8"));
-
-        } catch (JSONException j) {
-            j.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            getSupportActionBar().setTitle("Dr Jane Doe");
+            doctorSpecialization.setText(event.getDoctor().getSpecialization());
+            experience.setText(event.getDoctor().getExperience());
+            languageDetailsTextView.setText(event.getDoctor().getLanguage());
         }
 
-        if (token != null && token.length() > 0) {
-            apiService.getDoctorById(inputJson, "Token " + token, new Callback<Doctor>() {
+        @Subscribe
+        public void onProfileFailed(DoctorProfileFailedEvent event) {
+            dialog.dismiss();
 
-                @Override
-                public void success(Doctor doctor, Response response) {
-
-                    if (doctor != null) {
-
-                        //populate ui with data from Doctor object
-                        Picasso.with(getBaseContext())
-                                .load(doctor.getPhoto())
-                                .into(doctorImageView);
-
-                        getSupportActionBar().setTitle("Dr Jane Doe");
-                        doctorSpecialization.setText(doctor.getSpecialization());
-                        experience.setText(doctor.getExperience());
-                        languageDetailsTextView.setText(doctor.getLanguage());
-
-                    }
-                    dialog.dismiss();
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-                    dialog.dismiss();
-                }
-            });
+            doctorsClient.getBus().unregister(this);
+            Toast.makeText(getBaseContext(), "Something went wrong", Toast.LENGTH_SHORT)
+                    .show();
         }
     }
 }

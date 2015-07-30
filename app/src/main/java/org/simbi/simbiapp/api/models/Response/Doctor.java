@@ -1,8 +1,9 @@
-package org.simbi.simbiapp.models;
+package org.simbi.simbiapp.api.models.Response;
 
 import com.google.gson.annotations.SerializedName;
 
-import org.simbi.simbiapp.utils.SimbiApi;
+import org.simbi.simbiapp.utils.SimbiConstants;
+
 
 /**
  * POJO implementation for Doctor Object
@@ -104,7 +105,7 @@ public class Doctor {
     }
 
     public String getPhoto() {
-        return SimbiApi.baseApiUrl + photo;
+        return SimbiConstants.baseApiUrl + photo;
     }
 
     public String getSpecialization() {

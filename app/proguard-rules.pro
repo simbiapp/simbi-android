@@ -17,3 +17,7 @@
 #}
 -dontwarn okio.**
 -dontwarn retrofit.**
+-keepclassmembers class ** {
+    @com.squareup.otto.Subscribe public *;
+    @com.squareup.otto.Produce public *;
+}

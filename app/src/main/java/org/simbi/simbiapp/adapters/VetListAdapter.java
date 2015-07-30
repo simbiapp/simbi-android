@@ -13,8 +13,8 @@ import com.squareup.picasso.Picasso;
 
 import org.simbi.simbiapp.R;
 import org.simbi.simbiapp.activities.VetProfileActivity;
-import org.simbi.simbiapp.models.Doctor;
-import org.simbi.simbiapp.utils.Constants;
+import org.simbi.simbiapp.api.models.Response.Doctor;
+import org.simbi.simbiapp.utils.SimbiConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +84,7 @@ public class VetListAdapter extends RecyclerView.Adapter<VetListAdapter.ViewHold
         @Override
         public void onClick(View view) {
             Intent mIntent = new Intent(view.getContext(), VetProfileActivity.class);
-            mIntent.putExtra(Constants.BUNDLE_DOC_ID,
+            mIntent.putExtra(SimbiConstants.BUNDLE_DOC_ID,
                     String.valueOf(doctorId));//sending the id of the selected doctor to next activity
             view.getContext().startActivity(mIntent);
         }

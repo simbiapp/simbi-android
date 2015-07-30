@@ -11,21 +11,19 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import com.squareup.otto.Subscribe;
 
 import org.simbi.simbiapp.R;
-import org.simbi.simbiapp.SimbiApp;
 import org.simbi.simbiapp.adapters.QuestionsAdapter;
-import org.simbi.simbiapp.models.Question;
+import org.simbi.simbiapp.api.interafaces.QuestionsClient;
+import org.simbi.simbiapp.api.retrofit.RetrofitQuestionsClient;
+import org.simbi.simbiapp.events.Questions.QuestionListEvent;
+import org.simbi.simbiapp.events.Questions.QuestionsListFailedEvent;
 import org.simbi.simbiapp.utils.AlertDialogManager;
-import org.simbi.simbiapp.utils.MiscUtils;
 import org.simbi.simbiapp.utils.SessionManagement;
-import org.simbi.simbiapp.utils.SimbiApi;
-
-import java.util.List;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import org.simbi.simbiapp.utils.Utils;
 
 public class QuestionsActivity extends AppCompatActivity implements
         SwipeRefreshLayout.OnRefreshListener {
@@ -37,6 +35,8 @@ public class QuestionsActivity extends AppCompatActivity implements
     private AlertDialogManager alert = new AlertDialogManager();
     private ProgressDialog dialog;
     private SharedPreferences prefs;
+
+    private QuestionsClient questionsClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +50,7 @@ public class QuestionsActivity extends AppCompatActivity implements
         setSupportActionBar(toolBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        questionsClient = RetrofitQuestionsClient.getClient(getBaseContext());
 
         swipeRefreshLayout.setColorSchemeColors(R.color.color_primary, R.color.color_primary_dark);
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -87,15 +88,17 @@ public class QuestionsActivity extends AppCompatActivity implements
 
     private void refreshQuestions() {
 
-        if (MiscUtils.hasInternetConnectivity(getBaseContext())) {
+        if (Utils.hasInternetConnectivity(getBaseContext())) {
 
             dialog = new ProgressDialog(QuestionsActivity.this);
             dialog.setMessage("Please Wait");
             dialog.setIndeterminate(true);
             dialog.show();
 
-            //populate recycler view with questions
-            populateQuestions();
+            questionsClient.getBus().register(new QuestionsListener());
+
+            String token = prefs.getString(SessionManagement.KEY_AUTH_TOKEN, "");
+            questionsClient.getAllQuestions(token);
 
         } else {
             alert.showAlertDialog(QuestionsActivity.this, getString(
@@ -104,37 +107,28 @@ public class QuestionsActivity extends AppCompatActivity implements
         }
     }
 
-    private void populateQuestions() {
+    private class QuestionsListener {
 
-        SimbiApi apiService = ((SimbiApp) getApplication()).getSimbiApiService();
+        @Subscribe
+        public void onQuestionsReceived(QuestionListEvent event) {
 
-        String token = prefs.getString(SessionManagement.KEY_AUTH_TOKEN, "");
+            questionsClient.getBus().unregister(this);
 
-        if (token != null && token.length() > 0) {
+            dialog.dismiss();
+            swipeRefreshLayout.setRefreshing(false);
+            QuestionsAdapter adapter = new QuestionsAdapter(getBaseContext(),
+                    event.getQuestions());
+            mRecyclerView.setAdapter(adapter);
 
-            apiService.getAllQuestions("Token " + token, new Callback<List<Question>>() {
+        }
 
-                @Override
-                public void success(List<Question> questions, Response response) {
+        @Subscribe
+        public void onQuestionReceiveFailed(QuestionsListFailedEvent event) {
+            dialog.dismiss();
 
-                    if (questions != null && questions.size() > 0) {
-
-                        QuestionsAdapter adapter = new QuestionsAdapter(getBaseContext(),
-                                questions);
-                        mRecyclerView.setAdapter(adapter);
-
-                        dialog.dismiss();
-                        swipeRefreshLayout.setRefreshing(false);
-
-                    }
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-                    dialog.dismiss();
-                    swipeRefreshLayout.setRefreshing(false);
-                }
-            });
+            questionsClient.getBus().unregister(this);
+            Toast.makeText(getBaseContext(), "Something Went Wrong", Toast.LENGTH_SHORT)
+                    .show();
         }
     }
 }

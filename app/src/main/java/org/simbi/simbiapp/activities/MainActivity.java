@@ -13,8 +13,6 @@ import org.simbi.simbiapp.R;
 import org.simbi.simbiapp.utils.AlertDialogManager;
 import org.simbi.simbiapp.utils.SessionManagement;
 
-import java.util.HashMap;
-
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,15 +40,6 @@ public class MainActivity extends AppCompatActivity {
 
         session = new SessionManagement(getApplicationContext());
         session.checkLogin();
-
-        // get user data from session
-        HashMap<String, String> user = session.getUserDetails();
-
-        // name
-        String name = user.get(SessionManagement.KEY_NAME);
-
-        // email
-        String email = user.get(SessionManagement.KEY_AUTH_TOKEN);
 
         searchVetProfile.setOnClickListener(new View.OnClickListener() {
             @Override
