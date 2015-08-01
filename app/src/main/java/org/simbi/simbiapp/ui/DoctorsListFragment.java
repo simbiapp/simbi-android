@@ -1,24 +1,25 @@
-package org.simbi.simbiapp.activities;
+package org.simbi.simbiapp.ui;
 
+import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionMenu;
 import com.squareup.otto.Subscribe;
 
 import org.simbi.simbiapp.R;
-import org.simbi.simbiapp.adapters.VetListAdapter;
+import org.simbi.simbiapp.ui.adapters.DoctorListAdapter;
 import org.simbi.simbiapp.api.interafaces.DoctorsClient;
 import org.simbi.simbiapp.api.retrofit.RetrofitDoctorsClient;
 import org.simbi.simbiapp.events.doctors.DoctorsListEvent;
@@ -27,11 +28,13 @@ import org.simbi.simbiapp.utils.AlertDialogManager;
 import org.simbi.simbiapp.utils.SessionManagement;
 import org.simbi.simbiapp.utils.Utils;
 
-public class VetListActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class DoctorsListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
-    private Toolbar toolBar;
+
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView mRecyclerView;
+    private View mDoctorsListView;
+    private Context context;
 
     private FloatingActionMenu floatingActionMenu;
 
@@ -43,25 +46,42 @@ public class VetListActivity extends AppCompatActivity implements SwipeRefreshLa
 
     private DoctorsClient doctorsClient;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_vet_list);
 
-        toolBar = (Toolbar) findViewById(R.id.toolbar_vet_list);
-        mRecyclerView = (RecyclerView) findViewById(R.id.vet_list_recycler_view);
-        floatingActionMenu = (FloatingActionMenu) findViewById(R.id.floating_menu_filter);
-        transparentOverlay = findViewById(R.id.transparent_overlay_view);
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_doctor_list);
-        setSupportActionBar(toolBar);
-        prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        doctorsClient = RetrofitDoctorsClient.getClient(getBaseContext());
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        context = getActivity();
+
+        prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        doctorsClient = RetrofitDoctorsClient.getClient(context);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.doctors_list_fragment, container, false);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        mDoctorsListView = getView();
+
+        mRecyclerView = (RecyclerView) mDoctorsListView.findViewById
+                (R.id.vet_list_recycler_view);
+        floatingActionMenu = (FloatingActionMenu) mDoctorsListView.findViewById
+                (R.id.floating_menu_filter);
+        transparentOverlay = mDoctorsListView.findViewById
+                (R.id.transparent_overlay_view);
+        swipeRefreshLayout = (SwipeRefreshLayout) mDoctorsListView.findViewById
+                (R.id.refresh_doctor_list);
 
         swipeRefreshLayout.setColorSchemeColors(R.color.color_primary, R.color.color_primary_light);
         swipeRefreshLayout.setOnRefreshListener(this);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(VetListActivity.this));
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
 
         floatingActionMenu.setClosedOnTouchOutside(true);
 
@@ -77,29 +97,8 @@ public class VetListActivity extends AppCompatActivity implements SwipeRefreshLa
                 }
             }
         });
-        refreshDoctorsList();
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_search_vet_profile, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        refreshDoctorsList();//fetch the doctors list
     }
 
     @Override
@@ -108,12 +107,12 @@ public class VetListActivity extends AppCompatActivity implements SwipeRefreshLa
     }
 
     private void refreshDoctorsList() {
-        if (Utils.hasInternetConnectivity(getBaseContext())) {
+        if (Utils.hasInternetConnectivity(context)) {
 
-            dialog = new ProgressDialog(VetListActivity.this);
+            dialog = new ProgressDialog(getActivity());
             dialog.setMessage("Please Wait");
             dialog.setIndeterminate(true);
-            dialog.show();
+          //  dialog.show();
             //populate doctors list
             String token = prefs.getString(SessionManagement.KEY_AUTH_TOKEN, "");
 
@@ -122,7 +121,7 @@ public class VetListActivity extends AppCompatActivity implements SwipeRefreshLa
 
 
         } else {
-            alert.showAlertDialog(VetListActivity.this, getString(R.string.message_login_fail),
+            alert.showAlertDialog(context, getString(R.string.message_login_fail),
                     getString(R.string.message_internet_disconnected), true);
         }
     }
@@ -132,11 +131,12 @@ public class VetListActivity extends AppCompatActivity implements SwipeRefreshLa
         @Subscribe
         public void onDoctorsListReceived(DoctorsListEvent event) {
 
-            doctorsClient.getBus().unregister(this);
             dialog.dismiss();
+            doctorsClient.getBus().unregister(this);
+
             swipeRefreshLayout.setRefreshing(false);
 
-            mRecyclerView.setAdapter(new VetListAdapter(getBaseContext(),
+            mRecyclerView.setAdapter(new DoctorListAdapter(context,
                     event.getDoctors()));
         }
 
@@ -145,7 +145,7 @@ public class VetListActivity extends AppCompatActivity implements SwipeRefreshLa
             dialog.dismiss();
 
             doctorsClient.getBus().unregister(this);
-            Toast.makeText(getBaseContext(), "Something Went Wrong", Toast.LENGTH_SHORT)
+            Toast.makeText(context, "Something Went Wrong", Toast.LENGTH_SHORT)
                     .show();
         }
     }

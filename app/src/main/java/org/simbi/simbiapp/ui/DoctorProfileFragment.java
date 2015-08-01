@@ -1,14 +1,20 @@
-package org.simbi.simbiapp.activities;
+package org.simbi.simbiapp.ui;
 
+import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -28,10 +34,11 @@ import org.simbi.simbiapp.utils.SessionManagement;
 import org.simbi.simbiapp.utils.SimbiConstants;
 import org.simbi.simbiapp.utils.Utils;
 
-public class VetProfileActivity extends AppCompatActivity {
+public class DoctorProfileFragment extends Fragment {
 
-    Toolbar toolbar;
     Menu menu;
+    View mView;
+    Context mContext;
 
     ImageView doctorImageView;
     View doctorOnline;
@@ -54,33 +61,42 @@ public class VetProfileActivity extends AppCompatActivity {
 
     DoctorsClient doctorsClient;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_vet_profile);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar_vet_profile);
-        doctorImageView = (ImageView) findViewById(R.id.doctor_image_profile);
-        doctorOnline = findViewById(R.id.doctor_online);
-        doctorSpecialization = (TextView) findViewById(R.id.doctor_specialization_text);
-        doctorLocation = (TextView) findViewById(R.id.doctor_location_text);
-        experience = (TextView) findViewById(R.id.doc_experience_text);
-        rateByHour = (TextView) findViewById(R.id.rate_by_hour_text);
-        likes = (TextView) findViewById(R.id.likes_text);
-        contactDoctor = (Button) findViewById(R.id.contact_vet);
-        biographyLayout = (LinearLayout) findViewById(R.id.layout_biography);
-        biographyDetailsTextView = (TextView) findViewById(R.id.biography_details);
-        biographyTextView = (TextView) findViewById(R.id.biography_textview);
-        languagesLayout = (LinearLayout) findViewById(R.id.layout_languages);
-        languageDetailsTextView = (TextView) findViewById(R.id.languages_details);
-        languageTextView = (TextView) findViewById(R.id.language_textview);
+        mContext = getActivity();
+        doctorsClient = RetrofitDoctorsClient.getClient(mContext);
+        prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
-        doctorsClient = RetrofitDoctorsClient.getClient(getBaseContext());
+    }
 
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.doctor_profile_fragment, container, false);
+    }
 
-        prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        mView = getView();
+
+        doctorImageView = (ImageView) mView.findViewById(R.id.doctor_image_profile);
+        doctorOnline = mView.findViewById(R.id.doctor_online);
+        doctorSpecialization = (TextView) mView.findViewById(R.id.doctor_specialization_text);
+        doctorLocation = (TextView) mView.findViewById(R.id.doctor_location_text);
+        experience = (TextView) mView.findViewById(R.id.doc_experience_text);
+        rateByHour = (TextView) mView.findViewById(R.id.rate_by_hour_text);
+        likes = (TextView) mView.findViewById(R.id.likes_text);
+        contactDoctor = (Button) mView.findViewById(R.id.contact_vet);
+        biographyLayout = (LinearLayout) mView.findViewById(R.id.layout_biography);
+        biographyDetailsTextView = (TextView) mView.findViewById(R.id.biography_details);
+        biographyTextView = (TextView) mView.findViewById(R.id.biography_textview);
+        languagesLayout = (LinearLayout) mView.findViewById(R.id.layout_languages);
+        languageDetailsTextView = (TextView) mView.findViewById(R.id.languages_details);
+        languageTextView = (TextView) mView.findViewById(R.id.language_textview);
 
         biographyLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,12 +132,12 @@ public class VetProfileActivity extends AppCompatActivity {
             }
         });
 
-        String doctorId = getIntent().getStringExtra(SimbiConstants.BUNDLE_DOC_ID);
+        String doctorId = getArguments().getString(SimbiConstants.BUNDLE_DOC_ID);
 
         if (doctorId != null && doctorId.length() != 0) {
-            if (Utils.hasInternetConnectivity(getBaseContext())) {
+            if (Utils.hasInternetConnectivity(mContext)) {
 
-                dialog = new ProgressDialog(VetProfileActivity.this);
+                dialog = new ProgressDialog(mContext);
                 dialog.setMessage("Please Wait");
                 dialog.setIndeterminate(true);
                 dialog.show();
@@ -133,23 +149,20 @@ public class VetProfileActivity extends AppCompatActivity {
                 doctorsClient.getDoctorsById(doctorId, token);
 
             } else {
-                alert.showAlertDialog(getBaseContext(), getString(R.string.message_login_fail),
+                alert.showAlertDialog(mContext, getString(R.string.message_login_fail),
                         getString(R.string.message_internet_disconnected), false);
             }
         }
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_vet_profile, menu);
-        this.menu = menu;
-        return true;
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_vet_profile, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -160,12 +173,12 @@ public class VetProfileActivity extends AppCompatActivity {
             return true;
         } else if (id == R.id.add_to_fav) {
             if (!addedToFavourite) {
-                Toast.makeText(getBaseContext(), "Added To Favourites", Toast.LENGTH_SHORT)
+                Toast.makeText(mContext, "Added To Favourites", Toast.LENGTH_SHORT)
                         .show();
                 addedToFavourite = true;
                 menu.findItem(R.id.add_to_fav).setIcon(R.drawable.ic_fab_star);
             } else {
-                Toast.makeText(getBaseContext(), "Removed From Favourites", Toast.LENGTH_SHORT)
+                Toast.makeText(mContext, "Removed From Favourites", Toast.LENGTH_SHORT)
                         .show();
                 addedToFavourite = false;
                 menu.findItem(R.id.add_to_fav).setIcon(R.drawable.ic_fab_star_off);
@@ -175,17 +188,22 @@ public class VetProfileActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public ActionBar getActionBar() {
+        return ((AppCompatActivity) getActivity()).getSupportActionBar();
+    }
+
     private class VetProfileListener {
 
         @Subscribe
         public void onProfileReceived(DoctorProfileEvent event) {
+            doctorsClient.getBus().unregister(this);
             dialog.dismiss();
 
-            Picasso.with(getBaseContext())
+            Picasso.with(mContext)
                     .load(event.getDoctor().getPhoto())
                     .into(doctorImageView);
 
-            getSupportActionBar().setTitle("Dr Jane Doe");
+            getActionBar().setTitle("Dr Jane Doe");
             doctorSpecialization.setText(event.getDoctor().getSpecialization());
             experience.setText(event.getDoctor().getExperience());
             languageDetailsTextView.setText(event.getDoctor().getLanguage());
@@ -196,8 +214,9 @@ public class VetProfileActivity extends AppCompatActivity {
             dialog.dismiss();
 
             doctorsClient.getBus().unregister(this);
-            Toast.makeText(getBaseContext(), "Something went wrong", Toast.LENGTH_SHORT)
+            Toast.makeText(mContext, "Something went wrong", Toast.LENGTH_SHORT)
                     .show();
         }
+
     }
 }

@@ -1,32 +1,24 @@
-package org.simbi.simbiapp.activities;
+package org.simbi.simbiapp.ui;
 
-import android.content.Intent;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import org.simbi.simbiapp.R;
-import org.simbi.simbiapp.utils.AlertDialogManager;
 import org.simbi.simbiapp.utils.SessionManagement;
-
 
 public class MainActivity extends AppCompatActivity {
 
     Toolbar toolBar;
 
-    // Alert Dialog Manager
-    AlertDialogManager alert = new AlertDialogManager();
-
-    // Session Manager Class
     SessionManagement session;
 
-    //Linear layout is acting as a button
-    LinearLayout searchVetProfile;
-    LinearLayout askQuestions;
+    Fragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,27 +26,23 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         toolBar = (Toolbar) findViewById(R.id.toolbar);
-        searchVetProfile = (LinearLayout) findViewById(R.id.search_vet_profile_button);
-        askQuestions = (LinearLayout) findViewById(R.id.question_button);
+
         setSupportActionBar(toolBar);
 
         session = new SessionManagement(getApplicationContext());
-        session.checkLogin();
+        if (session.checkLogin()) {
+            //open dashboard fragment
+            fragment = DashBoardFragment.createInstance();
 
-        searchVetProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, VetListActivity.class);
-                startActivity(intent);
-            }
-        });
+        } else {
+            //not logged in open login fragment
+            fragment = LoginFragment.createInstance();
+        }
 
-        askQuestions.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, QuestionsActivity.class));
-            }
-        });
+        getFragmentManager().beginTransaction()
+                .replace(R.id.main_activity_container, fragment)
+                .commit();
+
     }
 
     @Override
@@ -78,4 +66,19 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onBackPressed() {
+
+        if(getFragmentManager().getBackStackEntryCount()>0) {
+
+            getFragmentManager().popBackStack();
+        }
+        else{
+            super.onBackPressed();
+            Toast.makeText(getBaseContext(), "finish", Toast.LENGTH_SHORT)
+                    .show();
+        }
+    }
+
 }

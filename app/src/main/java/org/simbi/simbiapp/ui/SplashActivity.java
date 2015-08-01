@@ -1,4 +1,4 @@
-package org.simbi.simbiapp.activities;
+package org.simbi.simbiapp.ui;
 
 import android.content.Intent;
 import android.content.SharedPreferences;

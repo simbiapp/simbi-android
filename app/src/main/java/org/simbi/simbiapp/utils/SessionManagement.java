@@ -1,16 +1,9 @@
 package org.simbi.simbiapp.utils;
 
-/**
- * Created by codeadict on 6/29/15.
- */
-
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
-
-import org.simbi.simbiapp.activities.LoginActivity;
 
 import java.util.HashMap;
 
@@ -55,20 +48,20 @@ public class SessionManagement {
 
     /**
      * Check login method wil check user login status
-     * If false it will redirect user to login page
-     * Else won't do anything
+     * If false it will return false
      */
-    public void checkLogin() {
+    public boolean checkLogin() {
         // Check login status
-        if (!this.isLoggedIn()) {
-            // user is not logged in redirect him to Login Activity
-            Intent i = new Intent(_context, LoginActivity.class);
+        if (this.isLoggedIn()) {
+            return true;
+            //Intent i = new Intent(_context, LoginActivity.class);
             // Closing all the Activities
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            //i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
             // Staring Login Activity
-            _context.startActivity(i);
+            //_context.startActivity(i);
         }
+        return false;
     }
 
 
@@ -96,15 +89,15 @@ public class SessionManagement {
         editor.commit();
 
         // After logout redirect user to Loing Activity
-        Intent i = new Intent(_context, LoginActivity.class);
+        //  Intent i = new Intent(_context, LoginActivity.class);
         // Closing all the Activities
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        //    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         // Add new Flag to start new Activity
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        //      i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         // Staring Login Activity
-        _context.startActivity(i);
+        //      _context.startActivity(i);
     }
 
     /**

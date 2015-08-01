@@ -1,4 +1,4 @@
-package org.simbi.simbiapp.adapters;
+package org.simbi.simbiapp.ui.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

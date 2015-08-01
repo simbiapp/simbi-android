@@ -1,9 +1,5 @@
 package org.simbi.simbiapp.utils;
 
-/**
- * Created by codeadict on 6/29/15.
- */
-
 import android.content.Context;
 import android.support.v7.app.AlertDialog;
 

@@ -14,48 +14,21 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".ui.MainActivity"
             android:label="@string/app_name" />
-        <activity
-            android:name=".activities.LoginActivity"
-            android:label="User Login" />
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
-            android:name=".activities.SplashActivity"
+            android:name=".ui.SplashActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".activities.VetListActivity"
-            android:label="@string/app_name"
-            android:parentActivityName=".activities.MainActivity"
-            android:windowSoftInputMode="stateHidden">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.simbi.simbiapp.activities.MainActivity" />
-        </activity>
-        <activity
-            android:name=".activities.VetProfileActivity"
-            android:parentActivityName=".activities.VetListActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.VetListActivity" />
-        </activity>
-        <activity
-            android:name=".activities.QuestionsActivity"
-            android:label="@string/title_activity_questions"
-            android:parentActivityName=".activities.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.simbi.simbiapp.activities.MainActivity" />
         </activity>
     </application>
 

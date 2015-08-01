@@ -1,7 +1,8 @@
-package org.simbi.simbiapp.adapters;
+package org.simbi.simbiapp.ui.adapters;
 
 import android.content.Context;
-import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,25 +13,25 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import org.simbi.simbiapp.R;
-import org.simbi.simbiapp.activities.VetProfileActivity;
 import org.simbi.simbiapp.api.models.Response.Doctor;
+import org.simbi.simbiapp.ui.DoctorProfileFragment;
 import org.simbi.simbiapp.utils.SimbiConstants;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class VetListAdapter extends RecyclerView.Adapter<VetListAdapter.ViewHolder> {
+public class DoctorListAdapter extends RecyclerView.Adapter<DoctorListAdapter.ViewHolder> {
 
     Context context;
     List<Doctor> doctors = new ArrayList<>();
 
-    public VetListAdapter(Context context, List<Doctor> doctors) {
+    public DoctorListAdapter(Context context, List<Doctor> doctors) {
         this.context = context;
         this.doctors = doctors;
     }
 
     @Override
-    public VetListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public DoctorListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.vet_list_item_card_view,
                 parent, false);
         TextView doctorName = (TextView) v.findViewById(R.id.doctor_name);
@@ -38,21 +39,38 @@ public class VetListAdapter extends RecyclerView.Adapter<VetListAdapter.ViewHold
         TextView location = (TextView) v.findViewById(R.id.doctor_location);
         ImageView image = (ImageView) v.findViewById(R.id.doctor_image);
 
-        int id = 0;// This is used for sending the doctor id of the selected doctor to next activity
-        return new ViewHolder(v, doctorName, branch, location, image, id);
+        return new ViewHolder(v, doctorName, branch, location, image);
     }
 
     @Override
-    public void onBindViewHolder(VetListAdapter.ViewHolder holder, int position) {
-        Doctor doctor = doctors.get(position);
+    public void onBindViewHolder(DoctorListAdapter.ViewHolder holder, int position) {
+        final Doctor doctor = doctors.get(position);
 
-        holder.doctorId = doctor.getId(); //retrieve the doctor id and assign it to its copy in ViewHolder
         holder.doctorNameTextView.setText("Dr Jane Doe");
         holder.doctorBranchTextView.setText(doctor.getSpecialization());
         holder.doctorLocationTextView.setText("Seattle");
         Picasso.with(context)
                 .load(doctor.getPhoto())
                 .into(holder.doctorImageView);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                DoctorProfileFragment fragment = new DoctorProfileFragment();
+
+                Bundle bundle = new Bundle();
+                bundle.putString(SimbiConstants.BUNDLE_DOC_ID,
+                        String.valueOf(doctor.getId()));
+                fragment.setArguments(bundle);
+
+                ((FragmentActivity) context).getFragmentManager()
+                        .beginTransaction()
+                        .addToBackStack(null)
+                        .replace(R.id.main_activity_container, fragment)
+                        .commit();
+            }
+        });
     }
 
     @Override
@@ -62,32 +80,23 @@ public class VetListAdapter extends RecyclerView.Adapter<VetListAdapter.ViewHold
         return 0;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         public TextView doctorNameTextView;
         public TextView doctorBranchTextView;
         public TextView doctorLocationTextView;
         public ImageView doctorImageView;
-        public int doctorId;
 
         public ViewHolder(View itemView, TextView name, TextView branch, TextView location,
-                          ImageView image, int id) {
+                          ImageView image) {
             super(itemView);
-            itemView.setOnClickListener(this);
             doctorNameTextView = name;
             doctorBranchTextView = branch;
             doctorLocationTextView = location;
             doctorImageView = image;
-            doctorId = id;
         }
 
-        @Override
-        public void onClick(View view) {
-            Intent mIntent = new Intent(view.getContext(), VetProfileActivity.class);
-            mIntent.putExtra(SimbiConstants.BUNDLE_DOC_ID,
-                    String.valueOf(doctorId));//sending the id of the selected doctor to next activity
-            view.getContext().startActivity(mIntent);
-        }
     }
 
 }
