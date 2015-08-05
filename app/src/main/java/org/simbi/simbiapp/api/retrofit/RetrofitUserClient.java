@@ -5,7 +5,7 @@ import com.squareup.otto.Bus;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.simbi.simbiapp.api.interafaces.UserClient;
+import org.simbi.simbiapp.api.interfaces.UserClient;
 import org.simbi.simbiapp.events.user.UserLoginEvent;
 import org.simbi.simbiapp.events.user.UserLoginFailedEvent;
 import org.simbi.simbiapp.utils.SimbiConstants;

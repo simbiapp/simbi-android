@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.squareup.otto.Subscribe;
 
 import org.simbi.simbiapp.R;
-import org.simbi.simbiapp.api.interafaces.UserClient;
+import org.simbi.simbiapp.api.interfaces.UserClient;
 import org.simbi.simbiapp.api.retrofit.RetrofitUserClient;
 import org.simbi.simbiapp.events.user.UserLoginEvent;
 import org.simbi.simbiapp.events.user.UserLoginFailedEvent;

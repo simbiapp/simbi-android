@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,7 +24,7 @@ import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 
 import org.simbi.simbiapp.R;
-import org.simbi.simbiapp.api.interafaces.DoctorsClient;
+import org.simbi.simbiapp.api.interfaces.DoctorsClient;
 import org.simbi.simbiapp.api.retrofit.RetrofitDoctorsClient;
 import org.simbi.simbiapp.events.doctors.DoctorProfileEvent;
 import org.simbi.simbiapp.events.doctors.DoctorProfileFailedEvent;

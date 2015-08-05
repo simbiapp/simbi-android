@@ -18,7 +18,7 @@ import com.squareup.otto.Subscribe;
 
 import org.simbi.simbiapp.R;
 import org.simbi.simbiapp.ui.adapters.QuestionsAdapter;
-import org.simbi.simbiapp.api.interafaces.QuestionsClient;
+import org.simbi.simbiapp.api.interfaces.QuestionsClient;
 import org.simbi.simbiapp.api.retrofit.RetrofitQuestionsClient;
 import org.simbi.simbiapp.events.Questions.QuestionListEvent;
 import org.simbi.simbiapp.events.Questions.QuestionsListFailedEvent;
@@ -120,6 +120,7 @@ public class QuestionsFragment extends Fragment implements SwipeRefreshLayout.On
             questionsClient.getBus().unregister(this);
             Toast.makeText(context, "Something Went Wrong", Toast.LENGTH_SHORT)
                     .show();
+            //TODO handle error in a better way
         }
     }
 

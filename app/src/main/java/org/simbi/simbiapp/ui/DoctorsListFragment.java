@@ -20,7 +20,7 @@ import com.squareup.otto.Subscribe;
 
 import org.simbi.simbiapp.R;
 import org.simbi.simbiapp.ui.adapters.DoctorListAdapter;
-import org.simbi.simbiapp.api.interafaces.DoctorsClient;
+import org.simbi.simbiapp.api.interfaces.DoctorsClient;
 import org.simbi.simbiapp.api.retrofit.RetrofitDoctorsClient;
 import org.simbi.simbiapp.events.doctors.DoctorsListEvent;
 import org.simbi.simbiapp.events.doctors.DoctorsListFailedEvent;

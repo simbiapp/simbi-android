@@ -2,7 +2,7 @@ package org.simbi.simbiapp.api.retrofit;
 
 import com.squareup.otto.Bus;
 
-import org.simbi.simbiapp.api.interafaces.PetsClient;
+import org.simbi.simbiapp.api.interfaces.PetsClient;
 import org.simbi.simbiapp.api.models.Response.Pet;
 import org.simbi.simbiapp.utils.SimbiConstants;
 

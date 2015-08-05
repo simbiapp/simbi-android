@@ -6,7 +6,7 @@ import com.squareup.otto.Bus;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.simbi.simbiapp.api.interafaces.DoctorsClient;
+import org.simbi.simbiapp.api.interfaces.DoctorsClient;
 import org.simbi.simbiapp.api.models.Response.Doctor;
 import org.simbi.simbiapp.events.doctors.DoctorProfileEvent;
 import org.simbi.simbiapp.events.doctors.DoctorProfileFailedEvent;

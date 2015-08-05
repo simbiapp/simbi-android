@@ -1,4 +1,4 @@
-package org.simbi.simbiapp.api.interafaces;
+package org.simbi.simbiapp.api.interfaces;
 
 import com.squareup.otto.Bus;
 

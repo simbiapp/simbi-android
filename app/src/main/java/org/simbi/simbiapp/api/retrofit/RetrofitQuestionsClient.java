@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.squareup.otto.Bus;
 
-import org.simbi.simbiapp.api.interafaces.QuestionsClient;
+import org.simbi.simbiapp.api.interfaces.QuestionsClient;
 import org.simbi.simbiapp.api.models.Response.Question;
 import org.simbi.simbiapp.events.Questions.QuestionListEvent;
 import org.simbi.simbiapp.events.Questions.QuestionsListFailedEvent;
