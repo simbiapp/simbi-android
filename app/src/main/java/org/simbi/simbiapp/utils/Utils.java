@@ -52,7 +52,7 @@ public class Utils {
 
     public static void closeStream(InputStream inputStream) {
         try {
-            if(inputStream!=null)
+            if (inputStream != null)
                 inputStream.close();
         } catch (IOException ioe) {
             ioe.printStackTrace();

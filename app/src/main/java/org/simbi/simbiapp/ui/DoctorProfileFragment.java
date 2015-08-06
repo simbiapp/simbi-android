@@ -68,8 +68,14 @@ public class DoctorProfileFragment extends Fragment {
         mContext = getActivity();
         doctorsClient = RetrofitDoctorsClient.getClient(mContext);
         prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+    }
 
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setTitle(getString(R.string.app_name));
     }
 
     @Override

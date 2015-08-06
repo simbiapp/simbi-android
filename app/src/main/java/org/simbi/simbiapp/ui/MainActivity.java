@@ -1,7 +1,6 @@
 package org.simbi.simbiapp.ui;
 
 import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -62,9 +61,7 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
-        }
-
-        else if(id==android.R.id.home) {
+        } else if (id == android.R.id.home) {
             onBackPressed();
             return true;
         }
@@ -75,11 +72,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
-        if(getFragmentManager().getBackStackEntryCount()>0) {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
 
             getFragmentManager().popBackStack();
-        }
-        else{
+        } else {
             super.onBackPressed();
             Toast.makeText(getBaseContext(), "finish", Toast.LENGTH_SHORT)
                     .show();

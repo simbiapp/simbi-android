@@ -6,8 +6,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,11 +20,11 @@ import com.github.clans.fab.FloatingActionMenu;
 import com.squareup.otto.Subscribe;
 
 import org.simbi.simbiapp.R;
-import org.simbi.simbiapp.ui.adapters.DoctorListAdapter;
 import org.simbi.simbiapp.api.interfaces.DoctorsClient;
 import org.simbi.simbiapp.api.retrofit.RetrofitDoctorsClient;
 import org.simbi.simbiapp.events.doctors.DoctorsListEvent;
 import org.simbi.simbiapp.events.doctors.DoctorsListFailedEvent;
+import org.simbi.simbiapp.ui.adapters.DoctorListAdapter;
 import org.simbi.simbiapp.utils.AlertDialogManager;
 import org.simbi.simbiapp.utils.SessionManagement;
 import org.simbi.simbiapp.utils.Utils;
@@ -57,10 +57,16 @@ public class DoctorsListFragment extends Fragment implements SwipeRefreshLayout.
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
         doctorsClient = RetrofitDoctorsClient.getClient(context);
 
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    @Nullable
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setTitle(getString(R.string.app_name));
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -115,7 +121,7 @@ public class DoctorsListFragment extends Fragment implements SwipeRefreshLayout.
             dialog = new ProgressDialog(getActivity());
             dialog.setMessage("Please Wait");
             dialog.setIndeterminate(true);
-          //  dialog.show();
+            //  dialog.show();
             //populate doctors list
             String token = prefs.getString(SessionManagement.KEY_AUTH_TOKEN, "");
 
@@ -127,6 +133,10 @@ public class DoctorsListFragment extends Fragment implements SwipeRefreshLayout.
             alert.showAlertDialog(context, getString(R.string.message_login_fail),
                     getString(R.string.message_internet_disconnected), true);
         }
+    }
+
+    public ActionBar getActionBar() {
+        return ((AppCompatActivity) getActivity()).getSupportActionBar();
     }
 
     private class DoctorsListenerEvent {

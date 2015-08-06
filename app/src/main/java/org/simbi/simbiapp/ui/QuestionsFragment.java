@@ -7,11 +7,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -19,11 +19,11 @@ import android.widget.Toast;
 import com.squareup.otto.Subscribe;
 
 import org.simbi.simbiapp.R;
-import org.simbi.simbiapp.ui.adapters.QuestionsAdapter;
 import org.simbi.simbiapp.api.interfaces.QuestionsClient;
 import org.simbi.simbiapp.api.retrofit.RetrofitQuestionsClient;
 import org.simbi.simbiapp.events.Questions.QuestionListEvent;
 import org.simbi.simbiapp.events.Questions.QuestionsListFailedEvent;
+import org.simbi.simbiapp.ui.adapters.QuestionsAdapter;
 import org.simbi.simbiapp.utils.AlertDialogManager;
 import org.simbi.simbiapp.utils.SessionManagement;
 import org.simbi.simbiapp.utils.Utils;
@@ -50,12 +50,19 @@ public class QuestionsFragment extends Fragment implements SwipeRefreshLayout.On
 
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
         questionsClient = RetrofitQuestionsClient.getClient(context);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setTitle("Forum");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.questions_fragment,container,false);
+        return inflater.inflate(R.layout.questions_fragment, container, false);
     }
 
     @Override
@@ -99,6 +106,10 @@ public class QuestionsFragment extends Fragment implements SwipeRefreshLayout.On
                             R.string.message_login_fail),
                     getString(R.string.message_internet_disconnected), true);
         }
+    }
+
+    public ActionBar getActionBar() {
+        return ((AppCompatActivity) getActivity()).getSupportActionBar();
     }
 
     private class QuestionsListener {
