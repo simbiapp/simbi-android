@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,10 +53,12 @@ public class DoctorProfileFragment extends Fragment {
     TextView languageDetailsTextView;
     TextView languageTextView;
 
+    LinearLayout profileContainer;
+
     Button contactDoctor;
     AlertDialogManager alert = new AlertDialogManager();
     SharedPreferences prefs;
-    ProgressDialog dialog;
+    ProgressBar progressBar;
     boolean addedToFavourite = false;
 
     DoctorsClient doctorsClient;
@@ -68,6 +71,7 @@ public class DoctorProfileFragment extends Fragment {
         mContext = getActivity();
         doctorsClient = RetrofitDoctorsClient.getClient(mContext);
         prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        progressBar=(ProgressBar) getActivity().findViewById(R.id.progress_bar);
     }
 
     @Override
@@ -89,6 +93,7 @@ public class DoctorProfileFragment extends Fragment {
 
         mView = getView();
 
+        profileContainer=(LinearLayout) mView.findViewById(R.id.doctor_profile_container);
         doctorImageView = (ImageView) mView.findViewById(R.id.doctor_image_profile);
         doctorOnline = mView.findViewById(R.id.doctor_online);
         doctorSpecialization = (TextView) mView.findViewById(R.id.doctor_specialization_text);
@@ -103,6 +108,8 @@ public class DoctorProfileFragment extends Fragment {
         languagesLayout = (LinearLayout) mView.findViewById(R.id.layout_languages);
         languageDetailsTextView = (TextView) mView.findViewById(R.id.languages_details);
         languageTextView = (TextView) mView.findViewById(R.id.language_textview);
+
+        profileContainer.setVisibility(View.GONE);
 
         biographyLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,15 +145,11 @@ public class DoctorProfileFragment extends Fragment {
             }
         });
 
+        progressBar.setVisibility(View.VISIBLE);
         String doctorId = getArguments().getString(SimbiConstants.BUNDLE_DOC_ID);
 
         if (doctorId != null && doctorId.length() != 0) {
             if (Utils.hasInternetConnectivity(mContext)) {
-
-                dialog = new ProgressDialog(mContext);
-                dialog.setMessage("Please Wait");
-                dialog.setIndeterminate(true);
-                dialog.show();
 
                 doctorsClient.getBus().register(new VetProfileListener());
 
@@ -202,8 +205,10 @@ public class DoctorProfileFragment extends Fragment {
 
         @Subscribe
         public void onProfileReceived(DoctorProfileEvent event) {
+
             doctorsClient.getBus().unregister(this);
-            dialog.dismiss();
+            progressBar.setVisibility(View.GONE);
+            profileContainer.setVisibility(View.VISIBLE);
 
             Picasso.with(mContext)
                     .load(event.getDoctor().getPhoto())
@@ -217,11 +222,11 @@ public class DoctorProfileFragment extends Fragment {
 
         @Subscribe
         public void onProfileFailed(DoctorProfileFailedEvent event) {
-            dialog.dismiss();
 
             doctorsClient.getBus().unregister(this);
             Toast.makeText(mContext, "Something went wrong", Toast.LENGTH_SHORT)
                     .show();
+            //TODO handle error properly
         }
 
     }

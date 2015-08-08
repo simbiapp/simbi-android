@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
@@ -34,8 +35,8 @@ public class QuestionsFragment extends Fragment implements SwipeRefreshLayout.On
     private RecyclerView mRecyclerView;
 
     private AlertDialogManager alert = new AlertDialogManager();
-    private ProgressDialog dialog;
     private SharedPreferences prefs;
+    private ProgressBar progressBar;
 
     private QuestionsClient questionsClient;
 
@@ -50,6 +51,7 @@ public class QuestionsFragment extends Fragment implements SwipeRefreshLayout.On
 
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
         questionsClient = RetrofitQuestionsClient.getClient(context);
+        progressBar=(ProgressBar) getActivity().findViewById(R.id.progress_bar);
     }
 
     @Override
@@ -77,8 +79,10 @@ public class QuestionsFragment extends Fragment implements SwipeRefreshLayout.On
         swipeRefreshLayout.setColorSchemeColors(R.color.color_primary, R.color.color_primary_dark);
         swipeRefreshLayout.setOnRefreshListener(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+        mRecyclerView.setVisibility(View.GONE);
 
         refreshQuestions();
+        progressBar.setVisibility(View.VISIBLE);//show progress bar
     }
 
 
@@ -90,11 +94,6 @@ public class QuestionsFragment extends Fragment implements SwipeRefreshLayout.On
     private void refreshQuestions() {
 
         if (Utils.hasInternetConnectivity(context)) {
-
-            dialog = new ProgressDialog(context);
-            dialog.setMessage("Please Wait");
-            dialog.setIndeterminate(true);
-            dialog.show();
 
             questionsClient.getBus().register(new QuestionsListener());
 
@@ -119,8 +118,10 @@ public class QuestionsFragment extends Fragment implements SwipeRefreshLayout.On
 
             questionsClient.getBus().unregister(this);
 
-            dialog.dismiss();
             swipeRefreshLayout.setRefreshing(false);
+            mRecyclerView.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
+
             QuestionsAdapter adapter = new QuestionsAdapter(context,
                     event.getQuestions());
             mRecyclerView.setAdapter(adapter);
@@ -128,7 +129,6 @@ public class QuestionsFragment extends Fragment implements SwipeRefreshLayout.On
 
         @Subscribe
         public void onQuestionReceiveFailed(QuestionsListFailedEvent event) {
-            dialog.dismiss();
 
             questionsClient.getBus().unregister(this);
             Toast.makeText(context, "Something Went Wrong", Toast.LENGTH_SHORT)

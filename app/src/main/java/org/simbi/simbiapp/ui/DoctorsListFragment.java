@@ -1,7 +1,6 @@
 package org.simbi.simbiapp.ui;
 
 import android.app.Fragment;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -14,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionMenu;
@@ -31,7 +31,6 @@ import org.simbi.simbiapp.utils.Utils;
 
 public class DoctorsListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
-
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView mRecyclerView;
     private View mDoctorsListView;
@@ -43,7 +42,8 @@ public class DoctorsListFragment extends Fragment implements SwipeRefreshLayout.
 
     private AlertDialogManager alert = new AlertDialogManager();
     private SharedPreferences prefs;
-    private ProgressDialog dialog;
+
+    private ProgressBar progressBar;
 
     private DoctorsClient doctorsClient;
 
@@ -56,7 +56,7 @@ public class DoctorsListFragment extends Fragment implements SwipeRefreshLayout.
 
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
         doctorsClient = RetrofitDoctorsClient.getClient(context);
-
+        progressBar=(ProgressBar) getActivity().findViewById(R.id.progress_bar);
     }
 
     @Override
@@ -91,6 +91,7 @@ public class DoctorsListFragment extends Fragment implements SwipeRefreshLayout.
         swipeRefreshLayout.setColorSchemeColors(R.color.color_primary, R.color.color_primary_light);
         swipeRefreshLayout.setOnRefreshListener(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+        mRecyclerView.setVisibility(View.GONE);
 
         floatingActionMenu.setClosedOnTouchOutside(true);
 
@@ -108,6 +109,7 @@ public class DoctorsListFragment extends Fragment implements SwipeRefreshLayout.
         });
 
         refreshDoctorsList();//fetch the doctors list
+        progressBar.setVisibility(View.VISIBLE);//show progress bar
     }
 
     @Override
@@ -118,16 +120,11 @@ public class DoctorsListFragment extends Fragment implements SwipeRefreshLayout.
     private void refreshDoctorsList() {
         if (Utils.hasInternetConnectivity(context)) {
 
-            dialog = new ProgressDialog(getActivity());
-            dialog.setMessage("Please Wait");
-            dialog.setIndeterminate(true);
-            //  dialog.show();
             //populate doctors list
             String token = prefs.getString(SessionManagement.KEY_AUTH_TOKEN, "");
 
             doctorsClient.getBus().register(new DoctorsListenerEvent());
             doctorsClient.getDoctors(token);
-
 
         } else {
             alert.showAlertDialog(context, getString(R.string.message_login_fail),
@@ -144,8 +141,10 @@ public class DoctorsListFragment extends Fragment implements SwipeRefreshLayout.
         @Subscribe
         public void onDoctorsListReceived(DoctorsListEvent event) {
 
-            dialog.dismiss();
             doctorsClient.getBus().unregister(this);
+
+            progressBar.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.VISIBLE);
 
             swipeRefreshLayout.setRefreshing(false);
 
@@ -155,7 +154,6 @@ public class DoctorsListFragment extends Fragment implements SwipeRefreshLayout.
 
         @Subscribe
         public void onDoctorsListFailed(DoctorsListFailedEvent event) {
-            dialog.dismiss();
 
             doctorsClient.getBus().unregister(this);
             Toast.makeText(context, "Something Went Wrong", Toast.LENGTH_SHORT)
