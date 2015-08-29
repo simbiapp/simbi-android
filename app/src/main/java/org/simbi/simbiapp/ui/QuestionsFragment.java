@@ -1,7 +1,6 @@
 package org.simbi.simbiapp.ui;
 
 import android.app.Fragment;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -51,7 +50,7 @@ public class QuestionsFragment extends Fragment implements SwipeRefreshLayout.On
 
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
         questionsClient = RetrofitQuestionsClient.getClient(context);
-        progressBar=(ProgressBar) getActivity().findViewById(R.id.progress_bar);
+        progressBar = (ProgressBar) getActivity().findViewById(R.id.progress_bar);
     }
 
     @Override

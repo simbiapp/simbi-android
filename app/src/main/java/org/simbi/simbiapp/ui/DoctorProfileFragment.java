@@ -1,7 +1,6 @@
 package org.simbi.simbiapp.ui;
 
 import android.app.Fragment;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -71,7 +70,7 @@ public class DoctorProfileFragment extends Fragment {
         mContext = getActivity();
         doctorsClient = RetrofitDoctorsClient.getClient(mContext);
         prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        progressBar=(ProgressBar) getActivity().findViewById(R.id.progress_bar);
+        progressBar = (ProgressBar) getActivity().findViewById(R.id.progress_bar);
     }
 
     @Override
@@ -93,7 +92,7 @@ public class DoctorProfileFragment extends Fragment {
 
         mView = getView();
 
-        profileContainer=(LinearLayout) mView.findViewById(R.id.doctor_profile_container);
+        profileContainer = (LinearLayout) mView.findViewById(R.id.doctor_profile_container);
         doctorImageView = (ImageView) mView.findViewById(R.id.doctor_image_profile);
         doctorOnline = mView.findViewById(R.id.doctor_online);
         doctorSpecialization = (TextView) mView.findViewById(R.id.doctor_specialization_text);

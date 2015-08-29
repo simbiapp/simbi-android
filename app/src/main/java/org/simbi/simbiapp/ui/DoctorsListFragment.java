@@ -56,7 +56,7 @@ public class DoctorsListFragment extends Fragment implements SwipeRefreshLayout.
 
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
         doctorsClient = RetrofitDoctorsClient.getClient(context);
-        progressBar=(ProgressBar) getActivity().findViewById(R.id.progress_bar);
+        progressBar = (ProgressBar) getActivity().findViewById(R.id.progress_bar);
     }
 
     @Override
